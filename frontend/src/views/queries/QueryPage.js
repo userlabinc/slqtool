@@ -16,10 +16,10 @@ const QueryPage = () => {
 
 
   const checkRecordSets = queryResults => {
-    return queryResults && queryResults.results &&
-      queryResults.results.recordsets &&
-      Array.isArray(queryResults.results.recordsets) &&
-      queryResults.results.recordsets.length
+    return queryResults
+       &&
+      Array.isArray(queryResults.recordset) &&
+      queryResults.recordset.length
   }
 
   const checkRowsAffected =  queryResults => {
@@ -43,7 +43,7 @@ const QueryPage = () => {
         setRecordsets([])
       } else {
         setShowingMessage(false)
-        setRecordsets(queryResult.results.recordsets[0])
+        setRecordsets(queryResult.recordset)
       }
 
 
@@ -53,7 +53,7 @@ const QueryPage = () => {
         setShowingMessage(false)
       } else {
         setShowingMessage(true)
-        SetRowsAffected(queryResult.results.rowsAffected[0])
+        SetRowsAffected(queryResult.rowsAffected[0])
       }
 
 
@@ -70,8 +70,10 @@ const QueryPage = () => {
   }
 
   const fetchQuery = async (query) => {
+    const headers = {'content-type': 'application/json'}
     const response = await fetch(process.env.REACT_APP_BACKEND_ENDPOINT, {
       method: 'post',
+      headers,
       body: JSON.stringify({query})
     })
 
