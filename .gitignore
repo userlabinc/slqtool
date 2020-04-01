@@ -1,7 +1,7 @@
 .idea
 .git
 # package directories
-node_modules
+backend/node_modules
 jspm_packages
 
 # Serverless directories
