@@ -1,51 +1,53 @@
 'use strict';
 const sql = require('mssql')
-module.exports.hello = async event => {
+const { response, readTables, detailsTable } = require('./utils')
+const { db } = require('./db')
 
-    const config = {
-        user: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        server: process.env.DB_HOST,
-        database: process.env.DB_NAME,
-    }
-
-    const makeQuery = async (query = '') => {
-        console.log(`Query inside: ${query}`)
-        let results = []
-        let errors = []
-        try {
-            // make sure that any items are correctly URL encoded in the connection string
-            let pool = await sql.connect(config)
-            const result = await sql.query(query)
-            console.dir(result)
-            results = result
-        } catch (err) {
-            console.log('There was an error in the connection', err)
-            errors.push(errors)
-        }
-
-        return {results, errors}
-    }
-
-
-
-
-    if (event.body !== null && event.body !== undefined) {
+module.exports.run = async event => {
+    try{
+        if (event.body === null || event.body === undefined )
+            throw Error('missing_params')
+        
         let body = JSON.parse(event.body)
-        console.log(body)
+        
+        if(!body || body.query === '') throw Error('missing_body')
+        
+        const connection = await sql.connect(db)
+        const db_response = await sql.query(body.query)
+        
+        return await response(200, db_response, connection)
+        
+    }catch (e) {
+        console.log(e, '<--- error')
+        return await response(400,e.message, null)
+    }
+}
 
-        if(body.query) {
-            const dbQueryObject = await makeQuery(body.query)
-            return {statusCode: 200, body: JSON.stringify(dbQueryObject, null, 2) }
-        }
-    } else {
-        return {
-            statusCode: 400, body: JSON.stringify({results: {}, errors:[{message: "Bad request"}]})
-        }
+module.exports.tables = async event => {
+    try{
+        const connection = await sql.connect(db)
+        const db_response = await sql.query(readTables())
+        const tables = db_response.recordsets[0].map( x => x.TABLE_NAME)
+        return await response(200, tables, connection)
+    }catch (e) {
+        console.log(e, '<--- error')
+        return await response(400,e.message, null)
+    }
+}
 
-
-        // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-        // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+module.exports.details = async event => {
+    try{
+        const param = event.queryStringParameters
+        
+        if(!param || !param.name ) Error('missing_body')
+        
+        const connection = await sql.connect(db)
+        const db_response = await sql.query(detailsTable(param))
+        const columns = db_response.recordsets[0].map( x => x.COLUMN_NAME)
+        return await response(200, columns, connection)
+    }catch (e) {
+        console.log(e, '<--- error')
+        return await response(400,e.message, null)
     }
 }
 
