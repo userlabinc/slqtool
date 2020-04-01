@@ -7,7 +7,7 @@ import NavBar from "./components/NavBar";
 const Router =()=>{
   return <div>
     <header className="flex-header">
-      Moocho Database | {process.env.REACT_APP_TESTING}
+      Moocho Database
     </header>
     <main className="flex-main">
       <NavBar/>
