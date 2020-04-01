@@ -28,6 +28,7 @@ functions:
       - http:
           path: run
           method: post
+          cors: true
 
   read:
     handler: handler.tables
@@ -35,6 +36,7 @@ functions:
       - http:
           path: read
           method: get
+          cors: true
 
   details:
     handler: handler.details
@@ -42,3 +44,4 @@ functions:
       - http:
           path: details
           method: get
+          cors: true
