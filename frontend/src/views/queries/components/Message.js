@@ -1,4 +1,5 @@
 import React from 'react'
+import {Col} from "antd";
 
 const messageTypes = {
   SUCCESS: 'SUCCESS',
@@ -11,9 +12,9 @@ const messageColorType = {
 }
 
 const Message = props => {
-  return <div style={{backgroundColor: messageColorType[props.type]}}>
+  return <Col sm={24}  style={{backgroundColor: messageColorType[props.type]}}>
     {props.value}
-  </div>
+  </Col>
 }
 
 

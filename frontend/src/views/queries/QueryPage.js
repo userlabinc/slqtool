@@ -1,12 +1,12 @@
-import React, {useState} from "react";
-import {message} from "antd";
-import QuerySquare from "./components/QuerySquare";
-import DinamicTable from "../../components/DinamicTable";
-import ExecuteQueryButton from "./components/ExecuteQueryButton";
+import React, { useState } from 'react'
+import { message, Row, Col } from 'antd'
+import QuerySquare from './components/QuerySquare'
+import DinamicTable from '../../components/DinamicTable'
+import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
 
 const QueryPage = () => {
-  const [query, setQuery] = useState('select * from testing.dbo.users where id=2')
+  const [query, setQuery] = useState('select * from users where id=2')
   const [recordsets, setRecordsets] = useState([])
   const [loading, setLoading] = useState(false)
   const [showingMessage, setShowingMessage] = useState(false)
@@ -14,25 +14,27 @@ const QueryPage = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [rowsAffected, SetRowsAffected] = useState([[]])
 
-
   const checkRecordSets = queryResults => {
-    return queryResults
-       &&
+    return (
+      queryResults &&
       Array.isArray(queryResults.recordset) &&
       queryResults.recordset.length
+    )
   }
 
-  const checkRowsAffected =  queryResults => {
-    return queryResults && queryResults.results &&
-      queryResults.results.rowsAffected &&
-      Array.isArray(queryResults.results.rowsAffected) &&
-      queryResults.results.rowsAffected.length
+  const checkRowsAffected = queryResults => {
+    return (
+      queryResults &&
+      queryResults &&
+      queryResults.rowsAffected &&
+      Array.isArray(queryResults.rowsAffected) &&
+      queryResults.rowsAffected.length
+    )
   }
-
 
   const executeQuery = async () => {
     setLoading(true)
-    let queryResult;
+    let queryResult
 
     try {
       queryResult = await fetchQuery(query)
@@ -46,17 +48,14 @@ const QueryPage = () => {
         setRecordsets(queryResult.recordset)
       }
 
-
       // Set rowsAffected
-      if(!checkRowsAffected(queryResult)) {
+      if (!checkRowsAffected(queryResult)) {
         SetRowsAffected([])
         setShowingMessage(false)
       } else {
         setShowingMessage(true)
         SetRowsAffected(queryResult.rowsAffected[0])
       }
-
-
     } catch (e) {
       // console.log(queryResult)
       console.error('Error: ', e)
@@ -69,38 +68,39 @@ const QueryPage = () => {
     }
   }
 
-  const fetchQuery = async (query) => {
-    const headers = {'content-type': 'application/json'}
+  const fetchQuery = async query => {
+    const headers = { 'content-type': 'application/json' }
     const response = await fetch(process.env.REACT_APP_BACKEND_ENDPOINT, {
       method: 'post',
       headers,
-      body: JSON.stringify({query})
+      body: JSON.stringify({ query }),
     })
 
     return response.json()
   }
 
-  return <div className="query-page">
-    <div className="query-square-wrapper">
-      <div className="query-page-inner-wrapper">
-        {showingMessage ? <>{
-          Message.success(`Rows Affected: ${rowsAffected}`)}
-          </> : null}
-        {showingErrorMessage ? <>{
-          Message.error(`Error: ${errorMessage}`)}
-        </> : null}
-        <QuerySquare loading={loading}
-                     query={query}
-                     setQuery={setQuery}/>
-
+  return (
+    <Row className='query-page'>
+        {showingMessage ? (
+          <>{Message.success(`Rows Affected: ${rowsAffected}`)}</>
+        ) : null}
+        {showingErrorMessage ? (
+          <>{Message.error(`Error: ${errorMessage}`)}</>
+        ) : null}
+      <Col sm={24} style={{ border: '1px solid red' }}>
+        <QuerySquare loading={loading} query={query} setQuery={setQuery} />
+      </Col>
+      <Col sm={12}>
         <ExecuteQueryButton
           loading={loading}
           onClick={executeQuery}
-          value={loading ? "Loading..." : "Execute"}/>
-      </div>
-    </div>
-    <DinamicTable recordsets={recordsets}/>
-  </div>
+          value={loading ? 'Loading...' : 'Execute'}
+        />
+      </Col>
+
+      <DinamicTable recordsets={recordsets} />
+    </Row>
+  )
 }
 
 export default QueryPage
