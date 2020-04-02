@@ -7,7 +7,7 @@ import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
 
 const QueryPage = () => {
-  const [query, setQuery] = useState('select * from users where id=2')
+  const [query, setQuery] = useState('')
   const [recordsets, setRecordsets] = useState([])
   const [loading, setLoading] = useState(false)
   const [showingMessage, setShowingMessage] = useState(false)
