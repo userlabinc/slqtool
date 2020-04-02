@@ -20,3 +20,9 @@
     background: #dedede;
   }
 }
+
+.dynamic-table-2 {
+  & .ant-table-container {
+   overflow-x: scroll;
+  }
+}

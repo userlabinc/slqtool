@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch, Route, Link } from 'react-router-dom'
 import QueryPage from './views/queries/QueryPage'
 import Home from './views/home'
+import configJson from './config'
 
 import { Layout, Menu } from 'antd'
 import {
@@ -9,15 +10,42 @@ import {
   PieChartOutlined,
   UserOutlined,
 } from '@ant-design/icons'
+import DetailsPage from './details/DetailsPage'
 
 const Router = () => {
+  const [collapsed, setCollapsed] = useState(false)
+  const [tablesList, setTablesList] = useState([])
+
   const { SubMenu } = Menu
   const { Header, Content, Footer, Sider } = Layout
 
-  const [collapsed, setCollapsed] = useState(false)
   const onCollapse = collapsed => {
-    console.log(collapsed)
     setCollapsed(collapsed)
+  }
+
+  useEffect(() => {
+    loadTablesInformation()
+  }, [])
+
+  const fetchTables = async () => {
+    console.log('Inside fetchTables function')
+
+    const headers = { 'content-type': 'application/json' }
+    const response = await fetch(configJson.REACT_APP_BACKEND_LIST_ENDPOINT, {
+      method: 'get',
+      headers,
+    })
+
+    return response.json()
+  }
+
+  const loadTablesInformation = async () => {
+    console.log('Inside load tables information')
+    try {
+      const response = await fetchTables()
+      setTablesList(response)
+      console.log(response)
+    } catch (e) {}
   }
 
   return (
@@ -43,9 +71,12 @@ const Router = () => {
                 </span>
               }
             >
-              <Menu.Item key='3'>Tom</Menu.Item>
-              <Menu.Item key='4'>Bill</Menu.Item>
-              <Menu.Item key='5'>Alex</Menu.Item>
+              {tablesList.length &&
+                tablesList.map((element, index) => (
+                  <Menu.Item key={index}>
+                    <Link to={`/details/${element}`}>{element}</Link>
+                  </Menu.Item>
+                ))}
             </SubMenu>
           </Menu>
         </Sider>
@@ -59,6 +90,9 @@ const Router = () => {
               <Switch>
                 <Route path='/query'>
                   <QueryPage />
+                </Route>
+                <Route path='/details/:tableName?'>
+                  <DetailsPage />
                 </Route>
                 <Route path='/'>
                   <Home />
