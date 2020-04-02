@@ -83,6 +83,7 @@ const Router = () => {
         <Layout className='site-layout'>
           <Header className='site-layout-background' style={{ padding: 0 }} />
           <Content style={{ margin: '0 16px' }}>
+            <div>V.1.0</div>
             <div
               className='site-layout-background'
               style={{ padding: 24, minHeight: 360 }}
