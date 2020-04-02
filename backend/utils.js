@@ -3,20 +3,17 @@ const readTables = () => `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE
 const detailsTable = p => `select COLUMN_NAME from information_schema.columns where table_name = '${p.name}';`
 
 const serializeDataToS3 = (data) => {
-  let params = {
-    query: data.query,
-  }
+  let params = { queries:data }
   return params
 }
 
-const saveToS3 = async (body,dataToS3,S3 ) => {
+const saveToS3 = async (dataToS3,S3 ) => {
   
   const paramsToS3 = {
     Body: JSON.stringify(dataToS3),
-    Bucket: 'u.moocho.com/sqlSaved',
-    Key: `${body.name}.json`,
-    Tagging: new Date().toISOString(),
-    Metadata: {'Content-Type' : 'application/json'}
+    Bucket: process.env.BUCKET,
+    Key: `store.json`,
+    Tagging: new Date().toISOString()
   }
   
   const P = await new Promise((resolve, reject) => {
@@ -37,46 +34,24 @@ const saveToS3 = async (body,dataToS3,S3 ) => {
 
 const getDataFromS3 = async (S3) => {
   const params = {
-    Bucket: 'u.moocho.com/sqlSaved',
-    Key: '*.json'
+    Bucket: process.env.BUCKET,
+    Key: 'store.json'
   };
   
   let p = await new Promise(((resolve, reject) => {
-    S3.getObject(params, function(err, data) {
+     S3.getObject(params, function(err, data) {
       if (err){
         console.log(err)
         reject(err); // an error occurred
       }
       else{
-        resolve(data.Body.toString())
+         resolve(data.Body.toString())
       }
     });
   }))
+  
   return JSON.parse(p)
 }
-
-const  allBucketKeys = async (s3) => {
-  const params = {
-    Bucket: 'u.moocho.com/sqlSaved',
-  };
-  
-  let keys = [];
-  for (;;) {
-    let data = await s3.listObjects(params).promise();
-    
-    data.Contents.forEach((elem) => {
-      keys = keys.concat(elem.Key);
-    });
-    
-    if (!data.IsTruncated) {
-      break;
-    }
-    params.Marker = data.NextMarker;
-  }
-  
-  return keys;
-}
-
 
 const response = (status, body, connection) => {
   if (connection) connection.close();
@@ -98,6 +73,5 @@ module.exports = {
   detailsTable,
   serializeDataToS3,
   saveToS3,
-  getDataFromS3,
-  allBucketKeys
+  getDataFromS3
 }

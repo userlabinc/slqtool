@@ -60,11 +60,11 @@ module.exports.saveQuery = async event => {
     
         let body = JSON.parse(event.body)
     
-        if(!body || body.query === '') throw Error('missing_body')
+        if(!body) throw Error('missing_body')
         
         const dataToS3 = serializeDataToS3(body)
         const S3 = new AWS.S3()
-        await saveToS3(body,dataToS3, S3 )
+        await saveToS3(dataToS3, S3 )
         
         return await response(200, dataToS3, null)
     }catch (e) {
@@ -75,11 +75,9 @@ module.exports.saveQuery = async event => {
 
 module.exports.getQueries = async event => {
     try{
-        
         const S3 = new AWS.S3()
-        const response = getDataFromS3(S3)
-        
-        return await response(200, response, null)
+        const rp = await getDataFromS3(S3)
+        return await response(200, rp, null)
     }catch (e) {
         console.log(e, '<--- error')
         return await response(400,e.message, null)
