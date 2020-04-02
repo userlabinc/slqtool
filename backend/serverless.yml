@@ -45,3 +45,19 @@ functions:
           path: details
           method: get
           cors: true
+
+  save:
+    handler: handler.saveQuery
+    events:
+      - http:
+          path: save
+          method: post
+          cors: true
+
+  GetQueries:
+    handler: handler.getQueries
+    events:
+      - http:
+          path: save
+          method: get
+          cors: true
