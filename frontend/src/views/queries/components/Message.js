@@ -12,7 +12,7 @@ const messageColorType = {
 }
 
 const Message = props => {
-  return <Col sm={24}  style={{backgroundColor: messageColorType[props.type]}}>
+  return <Col sm={24}  style={{backgroundColor: messageColorType[props.type], padding: '5px'}}>
     {props.value}
   </Col>
 }

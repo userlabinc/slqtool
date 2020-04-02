@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { message, Row, Col } from 'antd'
+import { Row, Col, Divider, Button } from 'antd'
 import QuerySquare from './components/QuerySquare'
 import DinamicTable from '../../components/DinamicTable'
 import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
+import DynamicTable2 from './components/DynamicTable2'
 
 const QueryPage = () => {
   const [query, setQuery] = useState('select * from users where id=2')
@@ -38,7 +39,7 @@ const QueryPage = () => {
 
     try {
       queryResult = await fetchQuery(query)
-      console.log('QR: ', queryResult)
+      // console.log('QR: ', queryResult)
 
       // Set recordset
       if (!checkRecordSets(queryResult)) {
@@ -81,24 +82,30 @@ const QueryPage = () => {
 
   return (
     <Row className='query-page'>
-        {showingMessage ? (
-          <>{Message.success(`Rows Affected: ${rowsAffected}`)}</>
-        ) : null}
-        {showingErrorMessage ? (
-          <>{Message.error(`Error: ${errorMessage}`)}</>
-        ) : null}
-      <Col sm={24} style={{ border: '1px solid red' }}>
+      {showingMessage ? (
+        <>{Message.success(`Rows Affected: ${rowsAffected}`)}</>
+      ) : null}
+      {showingErrorMessage ? (
+        <>{Message.error(`Error: ${errorMessage}`)}</>
+      ) : null}
+      <Col sm={24} style={{marginTop: '10px'}}>
         <QuerySquare loading={loading} query={query} setQuery={setQuery} />
       </Col>
-      <Col sm={12}>
+      <Divider style={{ backgroundColor: 'lightgray' }} />
+      <Col sm={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button disabled={loading}>Export to Excel</Button>
+        <Button disabled={loading}>Save Query</Button>
         <ExecuteQueryButton
           loading={loading}
           onClick={executeQuery}
           value={loading ? 'Loading...' : 'Execute'}
         />
       </Col>
+      <Divider style={{ backgroundColor: 'lightgray' }} />
 
-      <DinamicTable recordsets={recordsets} />
+      <Col sm={24}>
+        <DynamicTable2 recordsets={recordsets} />
+      </Col>
     </Row>
   )
 }
