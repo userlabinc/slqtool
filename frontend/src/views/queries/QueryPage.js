@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Row, Col, Divider, Button } from 'antd'
 import QuerySquare from './components/QuerySquare'
-import DinamicTable from '../../components/DinamicTable'
 import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
@@ -11,8 +10,6 @@ const QueryPage = () => {
   const [recordsets, setRecordsets] = useState([])
   const [loading, setLoading] = useState(false)
   const [showingMessage, setShowingMessage] = useState(false)
-  const [showingErrorMessage, setShowingErrorMessage] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
   const [rowsAffected, SetRowsAffected] = useState([[]])
 
   const checkRecordSets = queryResults => {
@@ -61,8 +58,6 @@ const QueryPage = () => {
       // console.log(queryResult)
       console.error('Error: ', e)
       setShowingMessage(false)
-      setErrorMessage(true)
-      setErrorMessage(e)
       setRecordsets([])
     } finally {
       setLoading(false)
@@ -85,10 +80,8 @@ const QueryPage = () => {
       {showingMessage ? (
         <>{Message.success(`Rows Affected: ${rowsAffected}`)}</>
       ) : null}
-      {showingErrorMessage ? (
-        <>{Message.error(`Error: ${errorMessage}`)}</>
-      ) : null}
-      <Col sm={24} style={{marginTop: '10px'}}>
+
+      <Col sm={24} style={{ marginTop: '10px' }}>
         <QuerySquare loading={loading} query={query} setQuery={setQuery} />
       </Col>
       <Divider style={{ backgroundColor: 'lightgray' }} />

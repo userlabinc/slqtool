@@ -25,6 +25,8 @@ const Router = () => {
 
   useEffect(() => {
     loadTablesInformation()
+
+    //eslint-disable-next-line
   }, [])
 
   const fetchTables = async () => {
@@ -43,8 +45,41 @@ const Router = () => {
     console.log('Inside load tables information')
     try {
       const response = await fetchTables()
-      setTablesList(response)
+      setTablesList(
+        response.map((element, index) => ({
+          title: element,
+          key: index,
+          children: [],
+        }))
+      )
       console.log(response)
+    } catch (e) {}
+  }
+
+  const fetchTableColumns = async tableName => {
+    const { REACT_APP_BACKEND_DETAIL_ENDPOINT } = configJson
+    console.log('Inside fetchTables function')
+
+    const headers = { 'content-type': 'application/json' }
+    const backendRoute = REACT_APP_BACKEND_DETAIL_ENDPOINT + tableName
+    console.log(backendRoute)
+    const response = await fetch(backendRoute, {
+      method: 'get',
+      headers,
+    })
+
+    return response.json()
+  }
+
+  const loadColumnsInformation = async tableIndex => {
+    try {
+      const columns = await fetchTableColumns(tablesList[tableIndex].title)
+      console.log('Columns:', columns)
+      setTablesList(prevState => {
+        let tables = [...prevState]
+        tables[tableIndex].children = columns
+        return tables
+      })
     } catch (e) {}
   }
 
@@ -73,9 +108,27 @@ const Router = () => {
             >
               {tablesList.length &&
                 tablesList.map((element, index) => (
-                  <Menu.Item key={index}>
-                    <Link to={`/details/${element}`}>{element}</Link>
-                  </Menu.Item>
+                  <SubMenu
+                    key={`ssub_menu_${index}`}
+                    children={[
+                      <Menu.Item>
+                        <span>Testing</span>
+                      </Menu.Item>,
+                    ]}
+                    title={
+                      <span onClick={() => loadColumnsInformation(element.key)}>
+                        <UserOutlined />
+                        <span>{element.title}</span>
+                      </span>
+                    }
+                  >
+                    {element.children.length &&
+                      element.children.map((tableColumn, tableColumnIndex) => (
+                        <Menu.Item key={`T${index}-C${tableColumn}`}>
+                          <span>{tableColumn}</span>
+                        </Menu.Item>
+                      ))}
+                  </SubMenu>
                 ))}
             </SubMenu>
           </Menu>
@@ -83,7 +136,6 @@ const Router = () => {
         <Layout className='site-layout'>
           <Header className='site-layout-background' style={{ padding: 0 }} />
           <Content style={{ margin: '0 16px' }}>
-            <div>V.1.0</div>
             <div
               className='site-layout-background'
               style={{ padding: 24, minHeight: 360 }}
@@ -102,7 +154,7 @@ const Router = () => {
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
-            Moocho {new Date().getFullYear()}
+            Userlab - {new Date().getFullYear()} - SQL Tool<span>V.0.0.1</span>
           </Footer>
         </Layout>
       </Layout>
