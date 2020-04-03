@@ -1,23 +1,17 @@
 import React, { useEffect, useState } from 'react'
+import { Layout, Menu } from 'antd'
+import { DesktopOutlined, UserOutlined } from '@ant-design/icons'
 import { Switch, Route, Link } from 'react-router-dom'
 import QueryPage from './views/queries/QueryPage'
-import Home from './views/home'
-import configJson from './config'
-
-import { Layout, Menu } from 'antd'
-import {
-  DesktopOutlined,
-  PieChartOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
 import DetailsPage from './details/DetailsPage'
+import { fetchTables, fetchTableColumns } from './config/Api'
 
 const Router = () => {
   const [collapsed, setCollapsed] = useState(false)
   const [tablesList, setTablesList] = useState([])
 
   const { SubMenu } = Menu
-  const { Header, Content, Footer, Sider } = Layout
+  const { Content, Footer, Sider } = Layout
 
   const onCollapse = collapsed => {
     setCollapsed(collapsed)
@@ -28,18 +22,6 @@ const Router = () => {
 
     //eslint-disable-next-line
   }, [])
-
-  const fetchTables = async () => {
-    console.log('Inside fetchTables function')
-
-    const headers = { 'content-type': 'application/json' }
-    const response = await fetch(configJson.REACT_APP_BACKEND_LIST_ENDPOINT, {
-      method: 'get',
-      headers,
-    })
-
-    return response.json()
-  }
 
   const loadTablesInformation = async () => {
     console.log('Inside load tables information')
@@ -53,22 +35,9 @@ const Router = () => {
         }))
       )
       console.log(response)
-    } catch (e) {}
-  }
-
-  const fetchTableColumns = async tableName => {
-    const { REACT_APP_BACKEND_DETAIL_ENDPOINT } = configJson
-    console.log('Inside fetchTables function')
-
-    const headers = { 'content-type': 'application/json' }
-    const backendRoute = REACT_APP_BACKEND_DETAIL_ENDPOINT + tableName
-    console.log(backendRoute)
-    const response = await fetch(backendRoute, {
-      method: 'get',
-      headers,
-    })
-
-    return response.json()
+    } catch (error) {
+      console.error('Error loading tables: ', error)
+    }
   }
 
   const loadColumnsInformation = async tableIndex => {
@@ -80,23 +49,42 @@ const Router = () => {
         tables[tableIndex].children = columns
         return tables
       })
-    } catch (e) {}
+    } catch (error) {
+      console.error('Error loading columns: ', error)
+    }
   }
 
   return (
     <div>
       <Layout style={{ minHeight: '100vh' }}>
-        <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={onCollapse}
+          width={200}
+        >
           <div className='logo' />
-          <Menu theme='dark' defaultSelectedKeys={['1']} mode='inline'>
-            <Menu.Item key='1'>
-              <PieChartOutlined />
-              <Link to='/'>Home</Link>
-            </Menu.Item>
-            <Menu.Item key='2'>
-              <DesktopOutlined />
-              <Link to='/query'>Query</Link>
-            </Menu.Item>
+          <Menu
+            mode='inline'
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            style={{ height: '100%', borderRight: 0 }}
+          >
+            <SubMenu
+              key='submenu_query'
+              title={
+                <span>
+                  <UserOutlined />
+                  <span>Query</span>
+                </span>
+              }
+            >
+              <Menu.Item key='1'>
+                <DesktopOutlined />
+                <Link to='/'>Query</Link>
+              </Menu.Item>
+            </SubMenu>
+
             <SubMenu
               key='sub1'
               title={
@@ -134,27 +122,24 @@ const Router = () => {
           </Menu>
         </Sider>
         <Layout className='site-layout'>
-          <Header className='site-layout-background' style={{ padding: 0 }} />
           <Content style={{ margin: '0 16px' }}>
             <div
               className='site-layout-background'
               style={{ padding: 24, minHeight: 360 }}
             >
               <Switch>
-                <Route path='/query'>
-                  <QueryPage />
-                </Route>
                 <Route path='/details/:tableName?'>
                   <DetailsPage />
                 </Route>
                 <Route path='/'>
-                  <Home />
+                  <QueryPage />
                 </Route>
               </Switch>
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
-            Userlab - {new Date().getFullYear()} - SQL Tool<span>V.0.0.1</span>
+            Userlab - {new Date().getFullYear()} - SQL Tool
+            <span>V.0.0.1</span>
           </Footer>
         </Layout>
       </Layout>
