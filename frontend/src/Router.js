@@ -154,7 +154,7 @@ const Router = () => {
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
-            Userlab - {new Date().getFullYear()} - SQL Tool<span>V.0.0.1</span>
+            Userlab - {new Date().getFullYear()} - SQL Tool<span>V - {process.env.REACT_APP_VERSION}</span>
           </Footer>
         </Layout>
       </Layout>
