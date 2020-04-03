@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Layout, Menu, Tree } from 'antd'
-import { DesktopOutlined, UserOutlined } from '@ant-design/icons'
+import { ToolOutlined, LayoutOutlined } from '@ant-design/icons'
 import { Switch, Route, Link } from 'react-router-dom'
 import QueryPage from './views/queries/QueryPage'
 import DetailsPage from './details/DetailsPage'
@@ -8,8 +8,6 @@ import { fetchTables, fetchTableColumns } from './config/Api'
 
 const Router = () => {
   const [collapsed, setCollapsed] = useState(false)
-  // eslint-disable-next-line
-  const [tablesList, setTablesList] = useState([])
   const [treeData, setTreeData] = useState([])
 
   const { SubMenu } = Menu
@@ -30,13 +28,6 @@ const Router = () => {
     console.log('Inside load tables information')
     try {
       const response = await fetchTables()
-      setTablesList(
-        response.map((element, index) => ({
-          title: element,
-          key: index,
-          children: [],
-        }))
-      )
       setTreeData(
         response.map((element, index) => ({
           title: element,
@@ -101,7 +92,7 @@ const Router = () => {
           collapsible
           collapsed={collapsed}
           onCollapse={onCollapse}
-          width={200}
+          width={350}
         >
           <div className='logo' />
           <Menu
@@ -110,21 +101,19 @@ const Router = () => {
             defaultOpenKeys={['sub1']}
             style={{ height: '100%', borderRight: 0 }}
           >
+            <Menu.Item key='1'>
+              <ToolOutlined />
+              <Link to='/'>Query</Link>
+            </Menu.Item>
             <SubMenu
-              key='submenu_query'
+              key='2'
               title={
-                <span>
-                  <UserOutlined />
-                  <span>Query</span>
-                </span>
+                <div>
+                  <LayoutOutlined />
+                  <span>Tables</span>
+                </div>
               }
             >
-              <Menu.Item key='1'>
-                <DesktopOutlined />
-                <Link to='/'>Query</Link>
-              </Menu.Item>
-            </SubMenu>
-            <SubMenu title='Tree'>
               <Tree loadData={onLoadData}>{renderTreeNodes(treeData)}</Tree>
             </SubMenu>
           </Menu>
