@@ -31,24 +31,22 @@ const DynamicTable2 = props => {
   }
 
   const renderTable = () => {
-    // console.log('Render table function')
     if (
       !getColumns() ||
       !getColumns().length ||
       !getDataSource() ||
       !getDataSource().length
     ) {
-      // console.log('Returning')
       return null
     }
 
     return (
       <React.Fragment>
         <Table
-          className="dynamic-table-2"
+          className='dynamic-table-2'
           columns={getColumns()}
           dataSource={getDataSource()}
-          pagination={{ pageSize: 500, position: ["topRight", "bottomRight"] }}
+          pagination={{ pageSize: 500, position: ['topRight', 'bottomRight'] }}
           rowKey={CUSTOM_KEY}
         />
       </React.Fragment>

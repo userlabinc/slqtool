@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Layout, Menu, Tree } from 'antd'
+import { Layout, Menu, message, Tree } from 'antd'
 import { ToolOutlined, LayoutOutlined } from '@ant-design/icons'
 import { Switch, Route, Link } from 'react-router-dom'
 import QueryPage from './views/queries/QueryPage'
@@ -25,7 +25,6 @@ const Router = () => {
   }, [])
 
   const loadTablesInformation = async () => {
-    console.log('Inside load tables information')
     try {
       const response = await fetchTables()
       setTreeData(
@@ -35,9 +34,8 @@ const Router = () => {
           rootNode: true,
         }))
       )
-      console.log(response)
     } catch (error) {
-      console.error('Error loading tables: ', error)
+      message.error('Error loading tables: ')
     }
   }
 
@@ -49,7 +47,6 @@ const Router = () => {
       }
       try {
         const columns = await fetchTableColumns(treeNode.props.title)
-        console.log('columns:', columns)
         treeNode.props.dataRef.children = columns.map(
           (column, columnIndex) => ({
             title: column,
@@ -59,7 +56,7 @@ const Router = () => {
         setTreeData([...treeData])
         resolve()
       } catch (error) {
-        console.error('Error fetching the columns')
+        message.error('Error fetching the columns')
       }
     })
 

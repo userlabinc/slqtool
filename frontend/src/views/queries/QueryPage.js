@@ -55,7 +55,7 @@ const QueryPage = () => {
         SetRowsAffected(queryResult.rowsAffected[0])
       }
     } catch (e) {
-      console.error('Error: ', e)
+      message.error('Error')
       setShowingMessage(false)
       setRecordsets([])
     } finally {
