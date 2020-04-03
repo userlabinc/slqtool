@@ -26,4 +26,5 @@ yarn-error.log*
 # Cofig
 .env
 src/config.json
+frontend/src/config.json
 src/config/config.json
