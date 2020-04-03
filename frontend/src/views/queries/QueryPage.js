@@ -4,7 +4,7 @@ import QuerySquare from './components/QuerySquare'
 import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
-import configJson from '../../config'
+import configJson from '../../config/config.json'
 
 const QueryPage = () => {
   const [query, setQuery] = useState('')
@@ -37,9 +37,7 @@ const QueryPage = () => {
 
     try {
       queryResult = await fetchQuery(query)
-      // console.log('QR: ', queryResult)
 
-      // Set recordset
       if (!checkRecordSets(queryResult)) {
         setRecordsets([])
       } else {
