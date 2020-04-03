@@ -44,7 +44,7 @@ module.exports.details = async event => {
         
         const connection = await sql.connect(db)
         const db_response = await sql.query(detailsTable(param))
-        const columns = db_response.recordsets[0].map( x => x.COLUMN_NAME)
+        const columns = db_response.recordsets[0].map( x => `${x.COLUMN_NAME} (${x. DATA_TYPE})`)
         return await response(200, columns, connection)
     }catch (e) {
         console.log(e, '<--- error')
