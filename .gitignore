@@ -10,3 +10,5 @@ jspm_packages
 .env
 .DS_Store
 .vscode
+frontend/node_modules
+frontend/build
