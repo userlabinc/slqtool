@@ -46,7 +46,7 @@ const DynamicTable2 = props => {
           className='dynamic-table-2'
           columns={getColumns()}
           dataSource={getDataSource()}
-          pagination={{ pageSize: 500, position: ['topRight', 'bottomRight'] }}
+          pagination={{ pageSize: 500, total: '10' }}
           rowKey={CUSTOM_KEY}
         />
       </React.Fragment>
