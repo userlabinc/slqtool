@@ -25,4 +25,4 @@ yarn-error.log*
 
 # Cofig
 .env
-config.json
+src/config.json

@@ -1,5 +1,0 @@
-{
-  "REACT_APP_BACKEND_ENDPOINT":"http://localhost:3000/dev/run",
-  "REACT_APP_BACKEND_LIST_ENDPOINT":"http://localhost:3000/dev/read",
-  "REACT_APP_BACKEND_DETAIL_ENDPOINT":"http//localhost:3000/dev/details?name="
-}
