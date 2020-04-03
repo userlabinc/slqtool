@@ -6,6 +6,11 @@ export const fetchTableColumns = async tableName => {
   return fetchGet(url)
 }
 
+export const fetchSavedQueries = async () => {
+  const { REACT_APP_SAVE_QUERIES } = configJson
+  return fetchGet(REACT_APP_SAVE_QUERIES)
+}
+
 export const fetchTables = async tableName => {
   const { REACT_APP_BACKEND_LIST_ENDPOINT } = configJson
   return fetchGet(REACT_APP_BACKEND_LIST_ENDPOINT)

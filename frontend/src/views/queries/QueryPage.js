@@ -1,5 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Row, Col, Divider, message, Button } from 'antd'
+
+// HOC
+import { withRouter } from 'react-router'
+
+// Components
 import QuerySquare from './components/QuerySquare'
 import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
@@ -7,12 +12,24 @@ import DynamicTable2 from './components/DynamicTable2'
 import configJson from '../../config/config.json'
 import CustomVerticalDivider from './components/CustomVerticalDivider'
 
-const QueryPage = () => {
+const QueryPage = props => {
   const [query, setQuery] = useState('')
   const [recordsets, setRecordsets] = useState([])
   const [loading, setLoading] = useState(false)
   const [showingMessage, setShowingMessage] = useState(false)
   const [rowsAffected, SetRowsAffected] = useState([[]])
+
+  const { inline_query } = props.match.params
+  useEffect(() => {
+    loadInlineQuery()
+    // eslint-disable-next-line
+  }, [inline_query])
+
+  const loadInlineQuery = () => {
+    if (inline_query) {
+      setQuery(inline_query)
+    }
+  }
 
   const checkRecordSets = queryResults => {
     return (
@@ -104,4 +121,4 @@ const QueryPage = () => {
   )
 }
 
-export default QueryPage
+export default withRouter(QueryPage)

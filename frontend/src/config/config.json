@@ -1,5 +1,6 @@
 {
   "REACT_APP_BACKEND_ENDPOINT":"https://ku4er7nvhc.execute-api.us-east-1.amazonaws.com/dev/run",
   "REACT_APP_BACKEND_LIST_ENDPOINT":"https://ku4er7nvhc.execute-api.us-east-1.amazonaws.com/dev/read",
-  "REACT_APP_BACKEND_DETAIL_ENDPOINT":"https://ku4er7nvhc.execute-api.us-east-1.amazonaws.com/dev/details?name="
+  "REACT_APP_BACKEND_DETAIL_ENDPOINT":"https://ku4er7nvhc.execute-api.us-east-1.amazonaws.com/dev/details?name=",
+  "REACT_APP_SAVE_QUERIES": "https://ku4er7nvhc.execute-api.us-east-1.amazonaws.com/dev/save"
 }

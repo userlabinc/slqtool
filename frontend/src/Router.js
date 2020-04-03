@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { Layout, Menu, message, Tree } from 'antd'
+import { Layout, Menu, Drawer, message, Tree } from 'antd'
 import { ToolOutlined, LayoutOutlined } from '@ant-design/icons'
 import { Switch, Route, Link } from 'react-router-dom'
+
+// HOC
+import { withRouter } from 'react-router'
+
+// Components
 import QueryPage from './views/queries/QueryPage'
 import DetailsPage from './details/DetailsPage'
-import { fetchTables, fetchTableColumns } from './config/Api'
+import { fetchTables, fetchTableColumns, fetchSavedQueries } from './config/Api'
 import LoginIndex from './views/login/LoginIndex'
 
-const Router = () => {
+const Router = props => {
   const [collapsed, setCollapsed] = useState(false)
   const [treeData, setTreeData] = useState([])
+  // eslint-disable-next-line
   const [login, setLogin] = useState(true)
+  const [savedQueriesDrawerIsOpen, setSavedQueriesDrawerIsOpen] = useState(
+    false
+  )
+
+  const [savedQueries, setSavedQueries] = useState([])
 
   const { SubMenu } = Menu
   const { Content, Footer, Sider } = Layout
@@ -35,6 +46,9 @@ const Router = () => {
           rootNode: true,
         }))
       )
+
+      const savedQueries = await fetchSavedQueries()
+      setSavedQueries(savedQueries.queries)
     } catch (error) {
       message.error('Error loading tables: ')
     }
@@ -74,8 +88,35 @@ const Router = () => {
     })
   }
 
+  const handleOpenSavedQueriesDrawer = () => {
+    setSavedQueriesDrawerIsOpen(true)
+  }
+
+  const goToSavedQuery = query => {
+    return () => {
+      props.history.push(`/${query}`)
+    }
+  }
+
   return (
     <div>
+      <Drawer
+        title='Saved Queries'
+        visible={savedQueriesDrawerIsOpen}
+        onClose={() => setSavedQueriesDrawerIsOpen(false)}
+      >
+        {savedQueries.length &&
+          savedQueries.map((element, index) => (
+            <div
+              key={index}
+              style={{ cursor: 'pointer', marginTop: '15px' }}
+              onClick={goToSavedQuery(element.query)}
+            >
+              {element.name}
+            </div>
+          ))}
+      </Drawer>
+
       {!login ? (
         <Route component={LoginIndex} />
       ) : (
@@ -97,8 +138,14 @@ const Router = () => {
                 <ToolOutlined />
                 <Link to='/'>Query</Link>
               </Menu.Item>
+              <Menu.Item key='2'>
+                <ToolOutlined />
+                <span onClick={() => handleOpenSavedQueriesDrawer()}>
+                  Saved Queries
+                </span>
+              </Menu.Item>
               <SubMenu
-                key='2'
+                key='3'
                 title={
                   <div>
                     <LayoutOutlined />
@@ -120,7 +167,7 @@ const Router = () => {
                   <Route path='/details/:tableName?'>
                     <DetailsPage />
                   </Route>
-                  <Route path='/'>
+                  <Route path='/:inline_query?'>
                     <QueryPage />
                   </Route>
                 </Switch>
@@ -138,4 +185,4 @@ const Router = () => {
   )
 }
 
-export default Router
+export default withRouter(Router)
