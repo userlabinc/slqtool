@@ -124,41 +124,6 @@ const Router = () => {
                 <Link to='/'>Query</Link>
               </Menu.Item>
             </SubMenu>
-
-            {/*<SubMenu*/}
-            {/*  key='sub1'*/}
-            {/*  title={*/}
-            {/*    <span>*/}
-            {/*      <UserOutlined />*/}
-            {/*      <span>Tables</span>*/}
-            {/*    </span>*/}
-            {/*  }*/}
-            {/*>*/}
-            {/*  {tablesList.length &&*/}
-            {/*    tablesList.map((element, index) => (*/}
-            {/*      <SubMenu*/}
-            {/*        key={`ssub_menu_${index}`}*/}
-            {/*        children={[*/}
-            {/*          <Menu.Item>*/}
-            {/*            <span>Testing</span>*/}
-            {/*          </Menu.Item>,*/}
-            {/*        ]}*/}
-            {/*        title={*/}
-            {/*          <span onClick={() => loadColumnsInformation(element.key)}>*/}
-            {/*            <UserOutlined />*/}
-            {/*            <span>{element.title}</span>*/}
-            {/*          </span>*/}
-            {/*        }*/}
-            {/*      >*/}
-            {/*        {element.children.length &&*/}
-            {/*          element.children.map((tableColumn, tableColumnIndex) => (*/}
-            {/*            <Menu.Item key={`T${index}-C${tableColumn}`}>*/}
-            {/*              <span>{tableColumn}</span>*/}
-            {/*            </Menu.Item>*/}
-            {/*          ))}*/}
-            {/*      </SubMenu>*/}
-            {/*    ))}*/}
-            {/*</SubMenu>*/}
             <SubMenu title='Tree'>
               <Tree loadData={onLoadData}>{renderTreeNodes(treeData)}</Tree>
             </SubMenu>
@@ -182,7 +147,7 @@ const Router = () => {
           </Content>
           <Footer style={{ textAlign: 'center' }}>
             Userlab - {new Date().getFullYear()} - SQL Tool
-            <span>V.0.0.1</span>
+            <span>V {process.env.REACT_APP_VERSION}</span>
           </Footer>
         </Layout>
       </Layout>
