@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Row, Col, Divider, Button } from 'antd'
+import { Row, Col, Divider, message, Button } from 'antd'
 import QuerySquare from './components/QuerySquare'
 import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'

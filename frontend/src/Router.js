@@ -12,7 +12,6 @@ const Router = () => {
 
   const { SubMenu } = Menu
   const { Content, Footer, Sider } = Layout
-  const { TreeNode } = Tree
 
   const onCollapse = collapsed => {
     setCollapsed(collapsed)
@@ -39,37 +38,37 @@ const Router = () => {
     }
   }
 
-  const onLoadData = treeNode =>
-    new Promise(async resolve => {
-      if (treeNode.props.children || !treeNode.props.rootNode) {
+  const onLoadData2 = treeNode => {
+    return new Promise(async resolve => {
+      const treeNodeIndex = treeData.findIndex(
+        element => element.key === treeNode.key
+      )
+      if (
+        treeData[treeNodeIndex].children ||
+        !treeData[treeNodeIndex].rootNode
+      ) {
         resolve()
         return
       }
       try {
-        const columns = await fetchTableColumns(treeNode.props.title)
-        treeNode.props.dataRef.children = columns.map(
-          (column, columnIndex) => ({
-            title: column,
-            key: `T-${treeNode.props.title}-C-${columnIndex}`,
+        const columns = await fetchTableColumns(treeData[treeNodeIndex].title)
+        const newChildren = columns.map((column, columnIndex) => ({
+          title: column,
+          key: `T-${treeData[treeNodeIndex]}-C-${columnIndex}`,
+        }))
+
+        setTreeData(prevTree => {
+          let tmpTree = [...prevTree]
+          tmpTree.splice(treeNodeIndex, 1, {
+            ...treeNode,
+            children: newChildren,
           })
-        )
-        setTreeData([...treeData])
+          return tmpTree
+        })
         resolve()
       } catch (error) {
         message.error('Error fetching the columns')
       }
-    })
-
-  const renderTreeNodes = data => {
-    return data.map(item => {
-      if (item.children) {
-        return (
-          <TreeNode title={item.title} key={item.key} dataRef={item}>
-            {renderTreeNodes(item.children)}
-          </TreeNode>
-        )
-      }
-      return <TreeNode key={item.key} {...item} dataRef={item} />
     })
   }
 
@@ -102,7 +101,7 @@ const Router = () => {
                 </div>
               }
             >
-              <Tree loadData={onLoadData}>{renderTreeNodes(treeData)}</Tree>
+              <Tree loadData={onLoadData2} treeData={treeData} />
             </SubMenu>
           </Menu>
         </Sider>
