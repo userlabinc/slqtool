@@ -56,7 +56,7 @@ module.exports.saveQuery = async event => {
     try{
         
         if (event.body === null || event.body === undefined )
-            throw Error('missing_params')
+            throw Error('missing_params ...')
     
         let body = JSON.parse(event.body)
     

@@ -3,6 +3,18 @@ service: sqlTool
 provider:
   name: aws
   runtime: nodejs12.x
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_PORT: ${env:DB_PORT}
+    DB_NAME: ${env:DB_NAME}
+    DB_USERNAME: ${env:DB_USERNAME}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    BUCKET: ${env:BUCKET}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action: "*"
+      Resource: "*"
 
 plugins:
   - serverless-dotenv-plugin
@@ -13,14 +25,6 @@ custom:
     path: ./.env
     basePath: ./
     logging: false
-
-environment:
-  DB_HOST: ${env:DB_HOST}
-  DB_PORT: ${env:DB_PORT}
-  DB_NAME: ${env:DB_NAME}
-  DB_USERNAME: ${env:DB_USERNAME}
-  DB_PASSWORD: ${env:DB_PASSWORD}
-  BUCKET: ${env:BUCKET}
 
 functions:
   run:
