@@ -16,6 +16,11 @@ export const fetchTables = async tableName => {
   return fetchGet(REACT_APP_BACKEND_LIST_ENDPOINT)
 }
 
+export const fetchSaveQuery = async json => {
+  const { REACT_APP_SAVE_QUERIES } = configJson
+  return fetchPost(REACT_APP_SAVE_QUERIES, json)
+}
+
 export const fetchQuery = async queryObject => {
   const { REACT_APP_BACKEND_ENDPOINT } = configJson
   return fetchPost(REACT_APP_BACKEND_ENDPOINT, queryObject)

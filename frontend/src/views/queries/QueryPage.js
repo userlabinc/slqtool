@@ -11,6 +11,8 @@ import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
 import configJson from '../../config/config.json'
 import CustomVerticalDivider from './components/CustomVerticalDivider'
+import SaveQueryModal from './components/SaveQueryModal'
+import { fetchSavedQueries } from '../../config/Api'
 
 const QueryPage = props => {
   const [query, setQuery] = useState('')
@@ -18,6 +20,8 @@ const QueryPage = props => {
   const [loading, setLoading] = useState(false)
   const [showingMessage, setShowingMessage] = useState(false)
   const [rowsAffected, SetRowsAffected] = useState([[]])
+  const [isOpenSaveQueryModal, setIsOpenSaveQueryModal] = useState(false)
+  const [saveQueryLoading, setSaveQueryLoading] = useState(false)
 
   const { inline_query } = props.match.params
   useEffect(() => {
@@ -80,6 +84,21 @@ const QueryPage = props => {
     }
   }
 
+  const saveQuery = async query => {
+    console.log('Saving query:', query)
+    setSaveQueryLoading(true)
+    try {
+      const savedQueries = await fetchSavedQueries()
+
+      // await fetchSavedQueries(setTimeout(() => {}, 3000))
+    } catch (e) {
+      message.error('Error saving the query')
+    } finally {
+      setIsOpenSaveQueryModal(false)
+      setSaveQueryLoading(false)
+    }
+  }
+
   const fetchQuery = async query => {
     const headers = { 'content-type': 'application/json' }
     const response = await fetch(configJson.REACT_APP_BACKEND_ENDPOINT, {
@@ -93,6 +112,12 @@ const QueryPage = props => {
 
   return (
     <Row className='query-page'>
+      <SaveQueryModal
+        visible={isOpenSaveQueryModal}
+        handleCloseModal={() => setIsOpenSaveQueryModal(false)}
+        handleSaveQuery={saveQuery}
+        loading={saveQueryLoading}
+      />
       {showingMessage ? (
         <>{Message.success(`Rows Affected: ${rowsAffected}`)}</>
       ) : null}
@@ -104,7 +129,12 @@ const QueryPage = props => {
       <Col sm={24} style={{ display: 'flex', justifyContent: 'center' }}>
         <Button disabled={loading}>Export to Excel</Button>
         <CustomVerticalDivider />
-        <Button disabled={loading}>Save Query</Button>
+        <Button
+          disabled={loading}
+          onClick={() => setIsOpenSaveQueryModal(true)}
+        >
+          Save Query
+        </Button>
         <CustomVerticalDivider />
         <ExecuteQueryButton
           loading={loading}
