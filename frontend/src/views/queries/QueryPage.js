@@ -4,6 +4,7 @@ import QuerySquare from './components/QuerySquare'
 import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
+import configJson from '../../config'
 
 const QueryPage = () => {
   const [query, setQuery] = useState('')
@@ -66,7 +67,7 @@ const QueryPage = () => {
 
   const fetchQuery = async query => {
     const headers = { 'content-type': 'application/json' }
-    const response = await fetch(process.env.REACT_APP_BACKEND_ENDPOINT, {
+    const response = await fetch(configJson.REACT_APP_BACKEND_ENDPOINT, {
       method: 'post',
       headers,
       body: JSON.stringify({ query }),
