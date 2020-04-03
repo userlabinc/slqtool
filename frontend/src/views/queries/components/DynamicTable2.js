@@ -49,7 +49,6 @@ const DynamicTable2 = props => {
           pagination={{
             pageSize: 500,
             position: ['topRight', 'bottomRight'],
-            pageSizeOptions: ['500', '1000'],
             showSizeChanger: false,
             showQuickJumper: true,
           }}
