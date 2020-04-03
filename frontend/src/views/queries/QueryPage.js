@@ -88,6 +88,7 @@ const QueryPage = props => {
     console.log('Saving query:', query)
     setSaveQueryLoading(true)
     try {
+      // eslint-disable-next-line
       const savedQueries = await fetchSavedQueries()
 
       // await fetchSavedQueries(setTimeout(() => {}, 3000))
