@@ -5,6 +5,7 @@ import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
 import configJson from '../../config/config.json'
+import CustomVerticalDivider from './components/CustomVerticalDivider'
 
 const QueryPage = () => {
   const [query, setQuery] = useState('')
@@ -54,7 +55,6 @@ const QueryPage = () => {
         SetRowsAffected(queryResult.rowsAffected[0])
       }
     } catch (e) {
-      // console.log(queryResult)
       console.error('Error: ', e)
       setShowingMessage(false)
       setRecordsets([])
@@ -84,9 +84,11 @@ const QueryPage = () => {
         <QuerySquare loading={loading} query={query} setQuery={setQuery} />
       </Col>
       <Divider style={{ backgroundColor: 'lightgray' }} />
-      <Col sm={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Col sm={24} style={{ display: 'flex', justifyContent: 'center' }}>
         <Button disabled={loading}>Export to Excel</Button>
+        <CustomVerticalDivider />
         <Button disabled={loading}>Save Query</Button>
+        <CustomVerticalDivider />
         <ExecuteQueryButton
           loading={loading}
           onClick={executeQuery}

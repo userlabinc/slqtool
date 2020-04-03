@@ -61,15 +61,6 @@ const Router = () => {
       } catch (error) {
         console.error('Error fetching the columns')
       }
-
-      // setTimeout(() => {
-      //   treeNode.props.dataRef.children = [
-      //     { title: 'Child Node', key: `${treeNode.props.eventKey}-0` },
-      //     { title: 'Child Node', key: `${treeNode.props.eventKey}-1` },
-      //   ]
-      //   setTreeData([...treeData])
-      //   resolve()
-      // }, 100)
     })
 
   const renderTreeNodes = data => {
@@ -135,7 +126,8 @@ const Router = () => {
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
-            Userlab - {new Date().getFullYear()} - SQL Tool
+            <span>Userlab - {new Date().getFullYear()} - SQL Tool</span>
+            <span> </span>
             <span>V {process.env.REACT_APP_VERSION}</span>
           </Footer>
         </Layout>
