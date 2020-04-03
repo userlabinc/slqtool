@@ -1,6 +1,6 @@
 const readTables = () => `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='Moocho' ORDER by TABLE_NAME ASC;`
 
-const detailsTable = p => `select COLUMN_NAME from information_schema.columns where table_name = '${p.name}';`
+const detailsTable = p => `select COLUMN_NAME, DATA_TYPE from information_schema.columns where table_name = '${p.name}';`
 
 const serializeDataToS3 = (data) => {
   let params = { queries:data }
