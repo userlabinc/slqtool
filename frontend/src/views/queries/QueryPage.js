@@ -1,18 +1,39 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Row, Col, Divider, message, Button } from 'antd'
+
+// HOC
+import { withRouter } from 'react-router'
+
+// Components
 import QuerySquare from './components/QuerySquare'
 import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
 import configJson from '../../config/config.json'
 import CustomVerticalDivider from './components/CustomVerticalDivider'
+import SaveQueryModal from './components/SaveQueryModal'
+import { fetchSavedQueries } from '../../config/Api'
 
-const QueryPage = () => {
+const QueryPage = props => {
   const [query, setQuery] = useState('')
   const [recordsets, setRecordsets] = useState([])
   const [loading, setLoading] = useState(false)
   const [showingMessage, setShowingMessage] = useState(false)
   const [rowsAffected, SetRowsAffected] = useState([[]])
+  const [isOpenSaveQueryModal, setIsOpenSaveQueryModal] = useState(false)
+  const [saveQueryLoading, setSaveQueryLoading] = useState(false)
+
+  const { inline_query } = props.match.params
+  useEffect(() => {
+    loadInlineQuery()
+    // eslint-disable-next-line
+  }, [inline_query])
+
+  const loadInlineQuery = () => {
+    if (inline_query) {
+      setQuery(inline_query)
+    }
+  }
 
   const checkRecordSets = queryResults => {
     return (
@@ -63,6 +84,22 @@ const QueryPage = () => {
     }
   }
 
+  const saveQuery = async query => {
+    console.log('Saving query:', query)
+    setSaveQueryLoading(true)
+    try {
+      // eslint-disable-next-line
+      const savedQueries = await fetchSavedQueries()
+
+      // await fetchSavedQueries(setTimeout(() => {}, 3000))
+    } catch (e) {
+      message.error('Error saving the query')
+    } finally {
+      setIsOpenSaveQueryModal(false)
+      setSaveQueryLoading(false)
+    }
+  }
+
   const fetchQuery = async query => {
     const headers = { 'content-type': 'application/json' }
     const response = await fetch(configJson.REACT_APP_BACKEND_ENDPOINT, {
@@ -76,6 +113,12 @@ const QueryPage = () => {
 
   return (
     <Row className='query-page'>
+      <SaveQueryModal
+        visible={isOpenSaveQueryModal}
+        handleCloseModal={() => setIsOpenSaveQueryModal(false)}
+        handleSaveQuery={saveQuery}
+        loading={saveQueryLoading}
+      />
       {showingMessage ? (
         <>{Message.success(`Rows Affected: ${rowsAffected}`)}</>
       ) : null}
@@ -87,7 +130,12 @@ const QueryPage = () => {
       <Col sm={24} style={{ display: 'flex', justifyContent: 'center' }}>
         <Button disabled={loading}>Export to Excel</Button>
         <CustomVerticalDivider />
-        <Button disabled={loading}>Save Query</Button>
+        <Button
+          disabled={loading}
+          onClick={() => setIsOpenSaveQueryModal(true)}
+        >
+          Save Query
+        </Button>
         <CustomVerticalDivider />
         <ExecuteQueryButton
           loading={loading}
@@ -104,4 +152,4 @@ const QueryPage = () => {
   )
 }
 
-export default QueryPage
+export default withRouter(QueryPage)
