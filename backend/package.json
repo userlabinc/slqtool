@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "serverless-dotenv-plugin": "^2.3.2",
     "serverless-offline": "^6.1.2"
   },
   "dependencies": {

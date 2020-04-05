@@ -1,7 +1,11 @@
 const dbConfig = (value) => {
   let config = {
     server: process.env.DB_HOST,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
+    options: {
+      enableArithAbort: true,
+      encrypt: true
+    }
   }
   
   if(value && value === 'ADMIN'){

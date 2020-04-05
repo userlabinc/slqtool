@@ -17,10 +17,8 @@ module.exports.run = async event => {
         let body = JSON.parse(event.body)
         
         if(!body || body.query === '') throw Error('missing_body')
-        console.log(db(group))
         const connection = await sql.connect(db(group))
         const db_response = await sql.query(body.query)
-        console.log(db_response,'res')
         return await response(200, db_response, connection)
         
     }catch (e) {
