@@ -55,7 +55,7 @@ const getToken = async () => {
 const fetchPost = async (url, postObject) => {
   const authorizer = await getToken()
   const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authorizer}` }
-  const options = { method: 'post', headers, body: JSON.stringify(postObject) }
+  const options = { method: 'post', headers, body: JSON.stringify({ query: postObject }) }
   console.log(options)
   const response = await fetch(url, options)
   return response.json()
