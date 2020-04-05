@@ -9,10 +9,9 @@ import QuerySquare from './components/QuerySquare'
 import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
-import configJson from '../../config/config.json'
 import CustomVerticalDivider from './components/CustomVerticalDivider'
 import SaveQueryModal from './components/SaveQueryModal'
-import { fetchSavedQueries } from '../../config/Api'
+import { fetchSavedQueries, fetchQuery } from '../../config/Api'
 
 const QueryPage = props => {
   const [query, setQuery] = useState('')
@@ -99,17 +98,7 @@ const QueryPage = props => {
       setSaveQueryLoading(false)
     }
   }
-
-  const fetchQuery = async query => {
-    const headers = { 'content-type': 'application/json' }
-    const response = await fetch(configJson.REACT_APP_BACKEND_ENDPOINT, {
-      method: 'post',
-      headers,
-      body: JSON.stringify({ query }),
-    })
-
-    return response.json()
-  }
+  
 
   return (
     <Row className='query-page'>

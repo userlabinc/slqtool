@@ -48,6 +48,7 @@ const getToken = async () => {
       .then( session => resolve(session.idToken.jwtToken))
       .catch( err => reject({ message: 'Unknown error' }))
   })
+  
   return token
 }
 
@@ -55,7 +56,7 @@ const fetchPost = async (url, postObject) => {
   const authorizer = await getToken()
   const headers = { 'content-type': 'application/json', 'Authorization': authorizer }
   const options = { method: 'post', headers, body: JSON.stringify(postObject) }
-
+  console.log(options)
   const response = await fetch(url, options)
   return response.json()
 }
