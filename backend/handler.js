@@ -12,7 +12,7 @@ module.exports.run = async event => {
             throw Error('group_not_valid')
         
         if (event.body === null || event.body === undefined )
-            throw Error('missing_params.')
+            throw Error('missing_params..')
         
         let body = JSON.parse(event.body)
         
