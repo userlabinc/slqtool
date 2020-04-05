@@ -35,6 +35,15 @@ functions:
           method: post
           cors: true
 
+  excel:
+    handler: handler.excel
+    events:
+      - http:
+          path: excel
+          method: post
+          cors: true
+
+
   read:
     handler: handler.tables
     events:
