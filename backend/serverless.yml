@@ -35,8 +35,6 @@ custom:
       - X-Api-Key
       - X-Amz-Security-Token
       - X-Amz-User-Agent
-   authorizer:
-     arn: ${file(${self:custom.config}):ARN}
 
 functions:
   run:
@@ -46,6 +44,8 @@ functions:
           path: run
           method: post
           cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}
 
   read:
     handler: handler.tables
@@ -54,6 +54,8 @@ functions:
           path: read
           method: get
           cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}
 
   details:
     handler: handler.details
@@ -62,6 +64,8 @@ functions:
           path: details
           method: get
           cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}
 
   save:
     handler: handler.saveQuery
@@ -70,6 +74,8 @@ functions:
           path: save
           method: post
           cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}
 
   GetQueries:
     handler: handler.getQueries
@@ -78,3 +84,5 @@ functions:
           path: save
           method: get
           cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}

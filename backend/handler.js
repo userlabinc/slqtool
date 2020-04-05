@@ -31,6 +31,7 @@ module.exports.run = async event => {
 
 module.exports.tables = async event => {
     try{
+        console.log(event,'ever')
         const connection = await sql.connect(db(null))
         const db_response = await sql.query(readTables())
         const tables = db_response.recordsets[0].map( x => x.TABLE_NAME)
