@@ -30,7 +30,7 @@ export const fetchQuery = async queryObject => {
 const fetchGet = async url => {
   
   const authorizer = await getToken()
-  const headers = { 'content-type': 'application/json', 'Authorization': authorizer }
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authorizer}` }
   const options = { method: 'get', headers }
 
   const response = await fetch(url, options)
@@ -54,7 +54,7 @@ const getToken = async () => {
 
 const fetchPost = async (url, postObject) => {
   const authorizer = await getToken()
-  const headers = { 'content-type': 'application/json', 'Authorization': authorizer }
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authorizer}` }
   const options = { method: 'post', headers, body: JSON.stringify(postObject) }
   console.log(options)
   const response = await fetch(url, options)
