@@ -28,13 +28,9 @@ export const fetchQuery = async queryObject => {
 }
 
 const fetchGet = async url => {
-  const token = await new Promise((resolve, reject) => {
-    Auth.currentSession()
-      .then( session => resolve(session.idToken.jwtToken))
-      .catch( err => reject({ message: 'Unknown error' }))
-  })
   
-  const headers = { 'content-type': 'application/json', 'Authorization': token }
+  const authorizer = await getToken()
+  const headers = { 'content-type': 'application/json', 'Authorization': authorizer }
   const options = { method: 'get', headers }
 
   const response = await fetch(url, options)
@@ -46,8 +42,18 @@ const fetchGet = async url => {
   return response.json()
 }
 
+const getToken = async () => {
+  const token = await new Promise((resolve, reject) => {
+    Auth.currentSession()
+      .then( session => resolve(session.idToken.jwtToken))
+      .catch( err => reject({ message: 'Unknown error' }))
+  })
+  return token
+}
+
 const fetchPost = async (url, postObject) => {
-  const headers = { 'content-type': 'application/json' }
+  const authorizer = await getToken()
+  const headers = { 'content-type': 'application/json', 'Authorization': authorizer }
   const options = { method: 'post', headers, body: JSON.stringify(postObject) }
 
   const response = await fetch(url, options)
