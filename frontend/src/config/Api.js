@@ -1,4 +1,5 @@
 import configJson from './config'
+import  { Auth } from 'aws-amplify';
 
 export const fetchTableColumns = async tableName => {
   const { REACT_APP_BACKEND_DETAIL_ENDPOINT } = configJson
@@ -27,7 +28,13 @@ export const fetchQuery = async queryObject => {
 }
 
 const fetchGet = async url => {
-  const headers = { 'content-type': 'application/json' }
+  const token = await new Promise((resolve, reject) => {
+    Auth.currentSession()
+      .then( session => resolve(session.idToken.jwtToken))
+      .catch( err => reject({ message: 'Unknown error' }))
+  })
+  
+  const headers = { 'content-type': 'application/json', 'Authorization': token }
   const options = { method: 'get', headers }
 
   const response = await fetch(url, options)
