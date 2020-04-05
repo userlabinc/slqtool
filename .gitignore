@@ -11,3 +11,4 @@ jspm_packages
 .env
 .DS_Store
 .vscode
+config.*.json

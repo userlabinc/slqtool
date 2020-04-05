@@ -67,11 +67,21 @@ const response = (status, body, connection) => {
   });
 }
 
+const verifyGroup = (event) => {
+  let group = ''
+  
+  if(event && event.requestContext && event.requestContext.authorizer)
+     group = event.requestContext.authorizer.claims["cognito:groups"][0]
+    
+  return group.toUpperCase()
+}
+
 module.exports = {
   response,
   readTables,
   detailsTable,
   serializeDataToS3,
   saveToS3,
-  getDataFromS3
+  getDataFromS3,
+  verifyGroup
 }
