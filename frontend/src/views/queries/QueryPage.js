@@ -22,15 +22,15 @@ const QueryPage = props => {
   const [isOpenSaveQueryModal, setIsOpenSaveQueryModal] = useState(false)
   const [saveQueryLoading, setSaveQueryLoading] = useState(false)
 
-  const { inline_query } = props.match.params
+  const { savedQueryToUse } = props
   useEffect(() => {
     loadInlineQuery()
     // eslint-disable-next-line
-  }, [inline_query])
+  }, [savedQueryToUse])
 
   const loadInlineQuery = () => {
-    if (inline_query) {
-      setQuery(inline_query)
+    if (savedQueryToUse) {
+      setQuery(savedQueryToUse)
     }
   }
 
@@ -98,7 +98,6 @@ const QueryPage = props => {
       setSaveQueryLoading(false)
     }
   }
-  
 
   return (
     <Row className='query-page'>
@@ -139,6 +138,10 @@ const QueryPage = props => {
       </Col>
     </Row>
   )
+}
+
+QueryPage.defaultProps = {
+  savedQueryToUse: '',
 }
 
 export default withRouter(QueryPage)

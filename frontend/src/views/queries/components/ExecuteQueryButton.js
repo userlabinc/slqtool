@@ -3,14 +3,14 @@ import { Button } from 'antd'
 
 const ExecuteQueryButton = props => {
   return (
-    <Button disabled={props.loading} onClick={props.onClick} type={"primary"}>
+    <Button disabled={props.loading} onClick={props.onClick} type={'primary'}>
       {props.value}
     </Button>
   )
 }
 
 ExecuteQueryButton.defaultProps = {
-  onClick: ()=>{}
+  onClick: () => {},
 }
 
 export default ExecuteQueryButton

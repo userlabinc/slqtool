@@ -22,6 +22,7 @@ const Router = props => {
   )
 
   const [savedQueries, setSavedQueries] = useState([])
+  const [savedQueryToUse, setSavedQueryToUse] = useState('')
 
   const { SubMenu } = Menu
   const { Content, Footer, Sider } = Layout
@@ -94,7 +95,7 @@ const Router = props => {
 
   const goToSavedQuery = query => {
     return () => {
-      props.history.push(`/${query}`)
+      setSavedQueryToUse(query)
     }
   }
 
@@ -168,7 +169,7 @@ const Router = props => {
                     <DetailsPage />
                   </Route>
                   <Route path='/:inline_query?'>
-                    <QueryPage />
+                    <QueryPage savedQueryToUse={savedQueryToUse} />
                   </Route>
                 </Switch>
               </div>

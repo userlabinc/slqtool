@@ -1,5 +1,5 @@
 import configJson from './config'
-import  { Auth } from 'aws-amplify';
+import { Auth } from 'aws-amplify'
 
 export const fetchTableColumns = async tableName => {
   const { REACT_APP_BACKEND_DETAIL_ENDPOINT } = configJson
@@ -28,9 +28,11 @@ export const fetchQuery = async queryObject => {
 }
 
 const fetchGet = async url => {
-  
   const authorizer = await getToken()
-  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authorizer}` }
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${authorizer}`,
+  }
   const options = { method: 'get', headers }
 
   const response = await fetch(url, options)
@@ -45,17 +47,24 @@ const fetchGet = async url => {
 const getToken = async () => {
   const token = await new Promise((resolve, reject) => {
     Auth.currentSession()
-      .then( session => resolve(session.idToken.jwtToken))
-      .catch( err => reject({ message: 'Unknown error' }))
+      .then(session => resolve(session.idToken.jwtToken))
+      .catch(err => reject({ message: 'Unknown error' }))
   })
-  
+
   return token
 }
 
 const fetchPost = async (url, postObject) => {
   const authorizer = await getToken()
-  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authorizer}` }
-  const options = { method: 'post', headers, body: JSON.stringify({ query: postObject }) }
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${authorizer}`,
+  }
+  const options = {
+    method: 'post',
+    headers,
+    body: JSON.stringify({ query: postObject }),
+  }
   console.log(options)
   const response = await fetch(url, options)
   return response.json()
