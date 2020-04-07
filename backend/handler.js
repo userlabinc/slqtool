@@ -9,6 +9,7 @@ const Stream = require("stream");
 
 module.exports.run = async event => {
     try{
+        if(wakeUpLambda(event)) return await response(200, {message: 'just warnUp me'}, null)
         
         const group = verifyGroup(event)
 
@@ -34,7 +35,7 @@ module.exports.run = async event => {
 
 module.exports.tables = async event => {
     try{
-        console.log(event,'ever')
+        if(wakeUpLambda(event)) return await response(200, {message: 'just warnUp me'}, null)
         const connection = await sql.connect(db(null))
         const db_response = await sql.query(readTables())
         const tables = db_response.recordsets[0].map( x => x.TABLE_NAME)
@@ -47,6 +48,7 @@ module.exports.tables = async event => {
 
 module.exports.details = async event => {
     try{
+        if(wakeUpLambda(event)) return await response(200, {message: 'just warnUp me'}, null)
         const param = event.queryStringParameters
 
         if(!param || !param.name ) Error('missing_body')
@@ -63,6 +65,8 @@ module.exports.details = async event => {
 
 module.exports.saveQuery = async event => {
     try{
+        if(wakeUpLambda(event)) return await response(200, {message: 'just warnUp me'}, null)
+        
         if (event.body === null || event.body === undefined )
             throw Error('missing_params ...')
 
@@ -83,6 +87,7 @@ module.exports.saveQuery = async event => {
 
 module.exports.getQueries = async event => {
     try{
+        if(wakeUpLambda(event)) return await response(200, {message: 'just warnUp me'}, null)
         const S3 = new AWS.S3()
         const rp = await getDataFromS3(S3)
         return await response(200, rp, null)

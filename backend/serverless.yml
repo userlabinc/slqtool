@@ -23,6 +23,7 @@ provider:
 
 plugins:
   - serverless-offline
+  - serverless-plugin-warmup
 
 custom:
   config: ./config/config.${self:provider.stage}.json
@@ -39,6 +40,7 @@ custom:
 
 functions:
   run:
+    warmup: true
     handler: handler.run
     events:
       - http:
@@ -58,6 +60,7 @@ functions:
 
 
   read:
+    warmup: true
     handler: handler.tables
     events:
       - http:
@@ -68,6 +71,7 @@ functions:
             arn: ${file(${self:custom.config}):ARN}
 
   details:
+    warmup: true
     handler: handler.details
     events:
       - http:
@@ -78,6 +82,7 @@ functions:
             arn: ${file(${self:custom.config}):ARN}
 
   save:
+    warmup: true
     handler: handler.saveQuery
     events:
       - http:
@@ -88,6 +93,7 @@ functions:
             arn: ${file(${self:custom.config}):ARN}
 
   GetQueries:
+    warmup: true
     handler: handler.getQueries
     events:
       - http:

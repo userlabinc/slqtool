@@ -126,6 +126,13 @@ const detailFile = async (recordSet) => {
   
 };
 
+const wakeUpLambda = (event) => {
+  if (event.source === 'serverless-plugin-warmup') {
+    console.log('WarmUP - Lambda is warm!')
+    return true
+  }
+  return false
+}
 
 module.exports = {
   response,
@@ -136,5 +143,6 @@ module.exports = {
   getDataFromS3,
   verifyGroup,
   saveExcelToS3,
-  detailFile
-};
+  detailFile,
+  wakeUpLambda
+}
