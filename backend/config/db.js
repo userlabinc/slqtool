@@ -1,4 +1,5 @@
-const dbConfig = (value) => {
+const dbConfig = (mode) => {
+  
   let config = {
     server: process.env.DB_HOST,
     database: process.env.DB_NAME,
@@ -8,7 +9,7 @@ const dbConfig = (value) => {
     }
   }
   
-  if(value && value[0] === 'admin'){
+  if(mode && mode === 'admin'){
     config.user = process.env.DB_USERNAME
     config.password = process.env.DB_PASSWORD
   }else {

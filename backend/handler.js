@@ -14,7 +14,7 @@ module.exports.run = async event => {
         const group = verifyGroup(event)
 
         if (!group)
-            throw Error('group_not_valid')
+            throw Error('group_not_valid.')
 
         if (event.body === null || event.body === undefined )
             throw Error('missing_params..')
