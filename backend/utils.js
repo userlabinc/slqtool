@@ -1,3 +1,5 @@
+const ExcelJS = require("exceljs");
+
 const readTables = () => `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='Moocho' ORDER by TABLE_NAME ASC;`
 
 const detailsTable = p => `select COLUMN_NAME, DATA_TYPE from information_schema.columns where table_name = '${p.name}';`
@@ -8,14 +10,14 @@ const serializeDataToS3 = (data) => {
 }
 
 const saveToS3 = async (dataToS3,S3 ) => {
-  
+
   const paramsToS3 = {
     Body: JSON.stringify(dataToS3),
     Bucket: process.env.BUCKET,
     Key: `store.json`,
     Tagging: new Date().toISOString()
   }
-  
+
   const P = await new Promise((resolve, reject) => {
     S3.putObject(paramsToS3, function(err, data) {
       if (err) {
@@ -27,9 +29,9 @@ const saveToS3 = async (dataToS3,S3 ) => {
       }
     })
   })
-  
+
   return P
-  
+
 }
 
 const getDataFromS3 = async (S3) => {
@@ -37,7 +39,7 @@ const getDataFromS3 = async (S3) => {
     Bucket: process.env.BUCKET,
     Key: 'store.json'
   };
-  
+
   let p = await new Promise(((resolve, reject) => {
      S3.getObject(params, function(err, data) {
       if (err){
@@ -49,7 +51,7 @@ const getDataFromS3 = async (S3) => {
       }
     });
   }))
-  
+
   return JSON.parse(p)
 }
 
@@ -69,12 +71,60 @@ const response = (status, body, connection) => {
 
 const verifyGroup = (event) => {
   let group = ''
-  
+
   if(event && event.requestContext && event.requestContext.authorizer)
-     group = event.requestContext.authorizer.claims["cognito:groups"]
-  console.log(group,'group')
-  return group
+     group = event.requestContext.authorizer.claims["cognito:groups"][0]
+  return group.toUpperCase()
 }
+
+const saveExcelToS3 = async (stream, key, S3) => {
+  const paramsToS3 = {
+    Body: stream,
+    Bucket: process.env.BUCKET,
+    Key: key,
+    Tagging: new Date().toISOString(),
+    ContentType:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  };
+
+  const P = await new Promise((resolve, reject) => {
+    S3.upload(paramsToS3, function (err, data) {
+      if (err) {
+        console.log(err);
+        reject(err); // an error occurred
+      } else {
+        resolve(data);
+      }
+    });
+  });
+
+  return P;
+};
+
+const detailFile = async (recordSet) => {
+  
+  let workbook = new ExcelJS.Workbook();
+  let creation_date = new Date();
+  workbook.creator = "Moocho";
+  workbook.modified = creation_date;
+  workbook.lastPrinted = creation_date;
+  
+  let sheet = workbook.addWorksheet("My Sheet");
+  let first_record = recordSet[0];
+  let recordSet_keys = Object.keys(first_record);
+  
+  sheet.columns = recordSet_keys.map((element) => ({
+    header: element,
+    key: element,
+  }));
+  
+  recordSet.forEach((element) => {
+    sheet.addRow(element);
+  });
+  
+  return workbook
+  
+};
 
 const wakeUpLambda = (event) => {
   if (event.source === 'serverless-plugin-warmup') {
@@ -92,5 +142,7 @@ module.exports = {
   saveToS3,
   getDataFromS3,
   verifyGroup,
+  saveExcelToS3,
+  detailFile,
   wakeUpLambda
 }

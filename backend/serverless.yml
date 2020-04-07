@@ -50,6 +50,15 @@ functions:
           authorizer:
             arn: ${file(${self:custom.config}):ARN}
 
+  excel:
+    handler: handler.excel
+    events:
+      - http:
+          path: excel
+          method: post
+          cors: true
+
+
   read:
     warmup: true
     handler: handler.tables
