@@ -76,6 +76,14 @@ const verifyGroup = (event) => {
   return group
 }
 
+const wakeUpLambda = (event) => {
+  if (event.source === 'serverless-plugin-warmup') {
+    console.log('WarmUP - Lambda is warm!')
+    return true
+  }
+  return false
+}
+
 module.exports = {
   response,
   readTables,
@@ -83,5 +91,6 @@ module.exports = {
   serializeDataToS3,
   saveToS3,
   getDataFromS3,
-  verifyGroup
+  verifyGroup,
+  wakeUpLambda
 }
