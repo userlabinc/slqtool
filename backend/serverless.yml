@@ -51,6 +51,7 @@ functions:
             arn: ${file(${self:custom.config}):ARN}
 
   excel:
+    warmup: true
     handler: handler.excel
     events:
       - http:

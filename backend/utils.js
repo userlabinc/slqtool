@@ -71,10 +71,11 @@ const response = (status, body, connection) => {
 
 const verifyGroup = (event) => {
   let group = ''
-
+  
   if(event && event.requestContext && event.requestContext.authorizer)
-     group = event.requestContext.authorizer.claims["cognito:groups"][0]
-  return group.toUpperCase()
+     group = event.requestContext.authorizer.claims["cognito:groups"]
+  console.log(group,'group')
+  return group
 }
 
 const saveExcelToS3 = async (stream, key, S3) => {

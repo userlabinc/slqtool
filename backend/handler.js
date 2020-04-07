@@ -99,6 +99,7 @@ module.exports.getQueries = async event => {
 
 module.exports.excel = async (event) => {
     try {
+        if(wakeUpLambda(event)) return await response(200, {message: 'just warnUp me'}, null)
         if (event.body === null || event.body === undefined) {
             throw Error("missing_params");
         }
