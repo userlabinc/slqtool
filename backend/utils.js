@@ -72,7 +72,7 @@ const verifyGroup = (event) => {
   
   if(event && event.requestContext && event.requestContext.authorizer)
      group = event.requestContext.authorizer.claims["cognito:groups"]
-  
+  console.log(group,'group')
   return group
 }
 

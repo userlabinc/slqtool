@@ -7,7 +7,6 @@ const AWS = require('aws-sdk')
 module.exports.run = async event => {
     try{
         
-        console.log(event,'event')
         const group = verifyGroup(event)
         
         if (!group)
@@ -19,7 +18,7 @@ module.exports.run = async event => {
         let body = JSON.parse(event.body)
         
         if(!body || body.query === '') throw Error('missing_body')
-        console.log(db(group), 'group')
+        
         const connection = await sql.connect(db(group))
         const db_response = await sql.query(body.query)
         return await response(200, db_response, connection)

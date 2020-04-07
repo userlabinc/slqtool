@@ -8,7 +8,7 @@ const dbConfig = (value) => {
     }
   }
   
-  if(value && value === 'admin'){
+  if(value && value[0] === 'admin'){
     config.user = process.env.DB_USERNAME
     config.password = process.env.DB_PASSWORD
   }else {
