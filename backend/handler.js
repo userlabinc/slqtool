@@ -100,7 +100,6 @@ module.exports.excel = async (event) => {
         
         let body = JSON.parse(event.body);
         if (!body || body.query === "") throw Error("missing_body");
-        const connection = await sql.connect(db(null));
         const db_response = await sql.query(body.query);
         const stream = new Stream.PassThrough();
 
@@ -108,9 +107,9 @@ module.exports.excel = async (event) => {
         if (!(recordset && recordset[0])) {
             throw Error("There is no recordset");
         }
-
+    
+        const connection = await sql.connect(db(null));
         let workbook =  await detailFile(recordset)
-        
         const S3 = new AWS.S3();
         const random = Math.floor(Math.random() * 100);
         const key = `recordset_${new Date().getTime()}_${random}.xlsx`;
