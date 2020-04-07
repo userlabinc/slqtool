@@ -1,0 +1,15 @@
+{
+  "DB_HOST": "database-dev.cwwf4dhfugf8.us-east-1.rds.amazonaws.com",
+  "DB_NAME":"Moocho",
+  "DB_PORT":1433,
+  "ARN":"arn:aws:cognito-idp:us-east-1:677531545458:userpool/us-east-1_8gkQh89gU",
+  "BUCKET":"u.moocho.com/sqlSaved",
+  "READ": {
+    "DB_USERNAME": "moocho-readon",
+    "DB_PASSWORD" : "diFmcNV9ue"
+  },
+  "ADMIN": {
+    "DB_USERNAME": "moocho-dev",
+    "DB_PASSWORD" : "m00f00b00!"
+  }
+}

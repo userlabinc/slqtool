@@ -94,10 +94,10 @@ module.exports.excel = async (event) => {
         if (event.body === null || event.body === undefined) {
             throw Error("missing_params");
         }
-
+        
         let body = JSON.parse(event.body);
         if (!body || body.query === "") throw Error("missing_body");
-        const connection = await sql.connect(db);
+        const connection = await sql.connect(db(null));
         const db_response = await sql.query(body.query);
         let workbook = new ExcelJS.Workbook();
         let creation_date = new Date();
