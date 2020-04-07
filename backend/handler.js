@@ -1,10 +1,11 @@
 'use strict';
+
 const sql = require('mssql')
-const {   saveExcelToS3, response, readTables, detailsTable, serializeDataToS3, saveToS3, getDataFromS3, verifyGroup } = require('./utils')
+const {   saveExcelToS3, response, readTables, detailsTable, serializeDataToS3, saveToS3, getDataFromS3, verifyGroup,detailFile } = require('./utils')
 const { db } = require('./config/db')
 const AWS = require('aws-sdk')
 const Stream = require("stream");
-const ExcelJS = require("exceljs");
+
 
 module.exports.run = async event => {
     try{
@@ -101,13 +102,6 @@ module.exports.excel = async (event) => {
         if (!body || body.query === "") throw Error("missing_body");
         const connection = await sql.connect(db(null));
         const db_response = await sql.query(body.query);
-        let workbook = new ExcelJS.Workbook();
-        let creation_date = new Date();
-        workbook.creator = "Moocho";
-        workbook.modified = creation_date;
-        workbook.lastPrinted = creation_date;
-
-        let sheet = workbook.addWorksheet("My Sheet");
         const stream = new Stream.PassThrough();
 
         const { recordset } = db_response;
@@ -115,18 +109,8 @@ module.exports.excel = async (event) => {
             throw Error("There is no recordset");
         }
 
-        let first_reccord = recordset[0];
-        let recordset_keys = Object.keys(first_reccord);
-
-        sheet.columns = recordset_keys.map((element) => ({
-            header: element,
-            key: element,
-        }));
-
-        recordset.forEach((element) => {
-            sheet.addRow(element);
-        });
-
+        let workbook =  await detailFile(recordset)
+        
         const S3 = new AWS.S3();
         const random = Math.floor(Math.random() * 100);
         const key = `recordset_${new Date().getTime()}_${random}.xlsx`;

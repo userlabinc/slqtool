@@ -1,3 +1,5 @@
+const ExcelJS = require("exceljs");
+
 const readTables = () => `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='Moocho' ORDER by TABLE_NAME ASC;`
 
 const detailsTable = p => `select COLUMN_NAME, DATA_TYPE from information_schema.columns where table_name = '${p.name}';`
@@ -75,7 +77,6 @@ const verifyGroup = (event) => {
   return group.toUpperCase()
 }
 
-
 const saveExcelToS3 = async (stream, key, S3) => {
   const paramsToS3 = {
     Body: stream,
@@ -100,6 +101,31 @@ const saveExcelToS3 = async (stream, key, S3) => {
   return P;
 };
 
+const detailFile = async (recordSet) => {
+  
+  let workbook = new ExcelJS.Workbook();
+  let creation_date = new Date();
+  workbook.creator = "Moocho";
+  workbook.modified = creation_date;
+  workbook.lastPrinted = creation_date;
+  
+  let sheet = workbook.addWorksheet("My Sheet");
+  let first_record = recordSet[0];
+  let recordSet_keys = Object.keys(first_record);
+  
+  sheet.columns = recordSet_keys.map((element) => ({
+    header: element,
+    key: element,
+  }));
+  
+  recordSet.forEach((element) => {
+    sheet.addRow(element);
+  });
+  
+  return workbook
+  
+};
+
 
 module.exports = {
   response,
@@ -110,4 +136,5 @@ module.exports = {
   getDataFromS3,
   verifyGroup,
   saveExcelToS3,
+  detailFile
 };
