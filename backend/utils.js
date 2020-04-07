@@ -72,7 +72,6 @@ const verifyGroup = (event) => {
 
   if(event && event.requestContext && event.requestContext.authorizer)
      group = event.requestContext.authorizer.claims["cognito:groups"][0]
-
   return group.toUpperCase()
 }
 

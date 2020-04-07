@@ -5,6 +5,7 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
   region: 'us-east-1'
+  timeout: 29
   environment:
     DB_HOST: ${file(${self:custom.config}):DB_HOST}
     DB_PORT: ${file(${self:custom.config}):DB_PORT}

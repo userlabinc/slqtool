@@ -8,6 +8,7 @@ const ExcelJS = require("exceljs");
 
 module.exports.run = async event => {
     try{
+        
         const group = verifyGroup(event)
 
         if (!group)
@@ -19,6 +20,7 @@ module.exports.run = async event => {
         let body = JSON.parse(event.body)
 
         if(!body || body.query === '') throw Error('missing_body')
+        
         const connection = await sql.connect(db(group))
         const db_response = await sql.query(body.query)
         return await response(200, db_response, connection)
