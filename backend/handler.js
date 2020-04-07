@@ -1,7 +1,7 @@
 'use strict';
 
 const sql = require('mssql')
-const {   saveExcelToS3, response, readTables, detailsTable, serializeDataToS3, saveToS3, getDataFromS3, verifyGroup,detailFile } = require('./utils')
+const {   saveExcelToS3, response, readTables, detailsTable, serializeDataToS3, saveToS3, getDataFromS3, verifyGroup,detailFile,wakeUpLambda } = require('./utils')
 const { db } = require('./config/db')
 const AWS = require('aws-sdk')
 const Stream = require("stream");
@@ -105,15 +105,15 @@ module.exports.excel = async (event) => {
         
         let body = JSON.parse(event.body);
         if (!body || body.query === "") throw Error("missing_body");
-        const db_response = await sql.query(body.query);
+    
+        const connection = await sql.connect(db(null));
         const stream = new Stream.PassThrough();
-
+        const db_response = await sql.query(body.query);
         const { recordset } = db_response;
         if (!(recordset && recordset[0])) {
             throw Error("There is no recordset");
         }
-    
-        const connection = await sql.connect(db(null));
+        
         let workbook =  await detailFile(recordset)
         const S3 = new AWS.S3();
         const random = Math.floor(Math.random() * 100);
