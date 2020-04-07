@@ -1,93 +1,8 @@
-$mainPaddingTop: 5px;
-
-* {
-  margin: 2px;
-}
-
-html {
-  height: 100%;
-}
-
-body {
-  background-color: white;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  font-size: 16px;
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-}
-
-.flex-header {
-  padding-bottom: $mainPaddingTop;
-  padding-top: $mainPaddingTop;
-}
-
-.flex-nav {
-  background-color: lightblue;
-  flex: 1;
-  padding-bottom: $mainPaddingTop;
-}
-
-.flex-aside {
-  background-color: #81a43c;
-  flex: 1;
-  padding-top: $mainPaddingTop;
-}
-
-.flex-article {
-  flex: 3 3;
-  padding-top: $mainPaddingTop;
-}
-
-.flex-footer {
-  border-top: 1px solid black;
-  padding-bottom: $mainPaddingTop;
-  padding-top: $mainPaddingTop;
-}
-
-
-.flex-main {
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-}
-
-.sidebar {
-  background-color: lightblue;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-}
-
-
-.column {
-  display: flex;
-  flex-direction: column;  /*places the left and right headers above the bottom content*/
-  height: 100%;  /*allows both columns to span the full height of the browser window*/
-}
-
 /** QUERY PAGE*/
 .query-page {
-  & .query-square-wrapper {
-    border: 1px solid red;
-    display: flex;
-  }
-
-  & .query-page-inner-wrapper {
-    border:1px solid blue;
-    display: flex;
-    flex-direction: column;
-    margin-top:10px;
-    max-width: 500px;
-    width: 80%;
-  }
-
   & .query-square {
-    border: 1px solid black;
-    height: 150px;
     width: 100%;
+    min-height: 150px;
   }
 
   & .query-page-execute-query-button {
@@ -95,10 +10,32 @@ body {
   }
 }
 
+.dinamic-table {
+  th {
+    border: 1px solid #c3c3c3
+  };
+  td {border: 1px solid #c3c3c3};
 
-
-@media all and (max-width: 540px){
-  .flex-main {
-    flex-direction: column;
+  & tbody tr:nth-child(2n) {
+    background: #dedede;
   }
+}
+
+.dynamic-table-2 {
+  & .ant-table-container {
+   overflow-x: scroll;
+  }
+}
+
+/** Login Page */
+.login-card {
+  box-shadow: 3px 3px #727272;
+  border-radius: 20px
+}
+
+.Section__sectionFooterSecondaryContent___Nj41Q {
+  display: none;
+}
+.Hint__hint___2XngB {
+  display: none;
 }

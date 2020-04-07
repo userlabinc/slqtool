@@ -1,15 +1,21 @@
-import React from "react";
+import React from 'react'
+import { Input } from 'antd'
 
 const QuerySquare = props => {
-  return <textarea
-    className={"query-square " + props.className}
-    onChange={event => props.setQuery(event.target.value)}
-    value={props.query}
+  const { TextArea } = Input
+  return (
+    <TextArea
+      disabled={props.loading}
+      className={'query-square ' + props.className}
+      onChange={event => props.setQuery(event.target.value)}
+      value={props.query}
     />
+  )
 }
 
 QuerySquare.defaultProps = {
-  className: "",
-  style: {}
+  className: '',
+  loading: false,
+  style: {},
 }
 export default QuerySquare
