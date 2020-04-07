@@ -70,7 +70,6 @@ const fetchPost = async (url, postObject) => {
     headers,
     body: JSON.stringify({ query: postObject }),
   }
-  console.log('options',options)
   const response = await fetch(url, options)
   return response.json()
 }
