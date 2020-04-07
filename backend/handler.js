@@ -11,7 +11,7 @@ module.exports.run = async event => {
     try{
         if(wakeUpLambda(event)) return await response(200, {message: 'just warnUp me'}, null)
         
-        const group = verifyGroup(event)
+        const group = await verifyGroup(event)
 
         if (!group)
             throw Error('group_not_valid.')

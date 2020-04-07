@@ -69,7 +69,7 @@ const response = (status, body, connection) => {
   });
 }
 
-const verifyGroup = (event) => {
+const verifyGroup = async (event) => {
   let group = ''
   
   if(event && event.requestContext && event.requestContext.authorizer)
