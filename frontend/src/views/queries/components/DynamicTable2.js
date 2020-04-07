@@ -26,6 +26,7 @@ const DynamicTable2 = props => {
     // const rowValues = Object.values()
     return props.recordsets.map((element, index) => {
       element[CUSTOM_KEY] = index
+
       return element
     })
   }
@@ -46,12 +47,7 @@ const DynamicTable2 = props => {
           className='dynamic-table-2'
           columns={getColumns()}
           dataSource={getDataSource()}
-          pagination={{
-            pageSize: 500,
-            position: ['topRight', 'bottomRight'],
-            showSizeChanger: false,
-            showQuickJumper: true,
-          }}
+          pagination={false}
           rowKey={CUSTOM_KEY}
         />
       </React.Fragment>
