@@ -3,7 +3,7 @@ import { Button } from 'antd'
 
 const ExecuteQueryButton = props => {
   return (
-    <Button disabled={props.loading} onClick={props.onClick} type={'primary'}>
+    <Button disabled={props.loading} onClick={props.onClick} >
       {props.value}
     </Button>
   )

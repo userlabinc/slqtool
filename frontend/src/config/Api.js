@@ -27,6 +27,11 @@ export const fetchQuery = async queryObject => {
   return fetchPost(REACT_APP_BACKEND_ENDPOINT, queryObject)
 }
 
+export const fetchExportExcel = async queryObject => {
+  const { REACT_APP_EXPORT_EXCEL } = configJson
+  return fetchPost(REACT_APP_EXPORT_EXCEL, queryObject)
+}
+
 const fetchGet = async url => {
   const authorizer = await getToken()
   const headers = {
@@ -65,7 +70,6 @@ const fetchPost = async (url, postObject) => {
     headers,
     body: JSON.stringify({ query: postObject }),
   }
-  console.log(options)
   const response = await fetch(url, options)
   return response.json()
 }

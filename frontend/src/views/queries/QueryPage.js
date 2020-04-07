@@ -11,7 +11,8 @@ import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
 import CustomVerticalDivider from './components/CustomVerticalDivider'
 import SaveQueryModal from './components/SaveQueryModal'
-import { fetchSavedQueries, fetchQuery } from '../../config/Api'
+import { fetchSavedQueries, fetchQuery, fetchExportExcel } from '../../config/Api'
+import ExportToExcelButton from './components/ExportToExcelButton'
 
 const QueryPage = props => {
   const [query, setQuery] = useState('')
@@ -59,11 +60,17 @@ const QueryPage = props => {
     try {
       queryResult = await fetchQuery(query)
 
+      if(typeof(queryResult) !== 'object'){
+        message.warning(queryResult)
+        return
+      }
+
       if (!checkRecordSets(queryResult)) {
         setRecordsets([])
       } else {
         setShowingMessage(false)
-        setRecordsets(queryResult.recordset)
+        let json = JSON.stringify(queryResult.recordset, (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
+        setRecordsets(JSON.parse(json))
       }
 
       // Set rowsAffected
@@ -99,6 +106,17 @@ const QueryPage = props => {
     }
   }
 
+  const exportExcel = async () => {
+    if(query !== ""){
+      let queryResult = await fetchExportExcel(query)
+      if(typeof(queryResult) === 'object'){
+        window.open(queryResult.link);
+      }else{
+       message.warning(queryResult)
+      }
+    }
+  }
+
   return (
     <Row className='query-page'>
       <SaveQueryModal
@@ -116,7 +134,11 @@ const QueryPage = props => {
       </Col>
       <Divider style={{ backgroundColor: 'lightgray' }} />
       <Col sm={24} style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button disabled={loading}>Export to Excel</Button>
+        <ExportToExcelButton
+        loading={loading}
+        onClick={executeQuery}
+        value={loading ? 'Loading...' : 'Execute'}
+        />
         <CustomVerticalDivider />
         <Button
           disabled={loading}
@@ -127,8 +149,8 @@ const QueryPage = props => {
         <CustomVerticalDivider />
         <ExecuteQueryButton
           loading={loading}
-          onClick={executeQuery}
-          value={loading ? 'Loading...' : 'Execute'}
+          onClick={exportExcel}
+          value={loading ? 'Loading...' : 'Export to Excel'}
         />
       </Col>
       <Divider style={{ backgroundColor: 'lightgray' }} />
