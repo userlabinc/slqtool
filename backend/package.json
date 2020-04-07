@@ -9,10 +9,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "serverless-dotenv-plugin": "^2.3.2",
-    "serverless-offline": "^6.1.2"
+    "serverless-offline": "^6.1.2",
+    "serverless-plugin-warmup": "^4.9.0"
   },
   "dependencies": {
+    "aws-sdk": "^2.651.0",
+    "exceljs": "^3.8.2",
     "mssql": "^6.2.0"
   }
 }

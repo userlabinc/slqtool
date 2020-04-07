@@ -3,45 +3,103 @@ service: sqlTool
 provider:
   name: aws
   runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: 'us-east-1'
+  timeout: 29
+  environment:
+    DB_HOST: ${file(${self:custom.config}):DB_HOST}
+    DB_PORT: ${file(${self:custom.config}):DB_PORT}
+    DB_NAME: ${file(${self:custom.config}):DB_NAME}
+    DB_USERNAME_READ: ${file(${self:custom.config}):READ.DB_USERNAME}
+    DB_PASSWORD_READ: ${file(${self:custom.config}):READ.DB_PASSWORD}
+    DB_USERNAME: ${file(${self:custom.config}):ADMIN.DB_USERNAME}
+    DB_PASSWORD: ${file(${self:custom.config}):ADMIN.DB_PASSWORD}
+    BUCKET: ${file(${self:custom.config}):BUCKET}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action: "*"
+      Resource: "*"
 
 plugins:
-  - serverless-dotenv-plugin
   - serverless-offline
+  - serverless-plugin-warmup
 
 custom:
-  dotenv:
-    path: ./.env
-    basePath: ./
-    logging: false
-
-environment:
-  DB_HOST: ${env:DB_HOST}
-  DB_PORT: ${env:DB_PORT}
-  DB_NAME: ${env:DB_NAME}
-  DB_USERNAME: ${env:DB_USERNAME}
-  DB_PASSWORD: ${env:DB_PASSWORD}
+  config: ./config/config.${self:provider.stage}.json
+  cors:
+   origin: '*'
+   allowCredentials: true
+   headers:
+      - Content-Type
+      - X-Amz-Date
+      - Authorization
+      - X-Api-Key
+      - X-Amz-Security-Token
+      - X-Amz-User-Agent
 
 functions:
   run:
+    warmup: true
     handler: handler.run
     events:
       - http:
           path: run
           method: post
+          cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}
+
+  excel:
+    warmup: true
+    handler: handler.excel
+    events:
+      - http:
+          path: excel
+          method: post
           cors: true
 
+
   read:
+    warmup: true
     handler: handler.tables
     events:
       - http:
           path: read
           method: get
-          cors: true
+          cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}
 
   details:
+    warmup: true
     handler: handler.details
     events:
       - http:
           path: details
           method: get
-          cors: true
+          cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}
+
+  save:
+    warmup: true
+    handler: handler.saveQuery
+    events:
+      - http:
+          path: save
+          method: post
+          cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}
+
+  GetQueries:
+    warmup: true
+    handler: handler.getQueries
+    events:
+      - http:
+          path: save
+          method: get
+          cors: ${self:custom.cors}
+          authorizer:
+            arn: ${file(${self:custom.config}):ARN}
