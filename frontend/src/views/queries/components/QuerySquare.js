@@ -7,7 +7,7 @@ const QuerySquare = props => {
     let $divQuery = document.getElementById('editor');
     let timeout
 
-    $divQuery.addEventListener("keydown", function(e){
+    $divQuery.addEventListener("keyup", function(e){
       clearTimeout(timeout)
       timeout = setTimeout(() => {
         let newHTML = "";
@@ -18,7 +18,6 @@ const QuerySquare = props => {
             newHTML += "<span class='other'>" + val + "&nbsp;</span>";
         });
         e.target.innerHTML = newHTML;
-
         let child = e.target.children;
         let range = document.createRange();
         let sel = window.getSelection();
