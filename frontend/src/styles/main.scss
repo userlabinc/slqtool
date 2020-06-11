@@ -12,7 +12,7 @@
 
 .dinamic-table {
   th {
-    border: 1px solid #c3c3c3
+    border: 0.7px solid #c3c3c3
   };
   td {border: 1px solid #c3c3c3};
 
@@ -25,6 +25,10 @@
   & .ant-table-container {
    overflow-x: scroll;
   }
+  th {
+    border: 0.3px solid #5f5c5c
+  };
+  td {border: 0.3px solid #5f5c5c};
 }
 
 /** Login Page */
@@ -39,3 +43,26 @@
 .Hint__hint___2XngB {
   display: none;
 }
+.ant-table-tbody > tr > td {
+  border-bottom: none;
+  border-right: none;
+  background: #dddddd;
+}
+.ant-table-thead > tr > th {
+  border-bottom: none;
+  border-right: none;
+  background: #808080;
+  color: #f0f0f0;
+  font-weight: bolder;
+}
+
+.ant-table {
+  font-size: 10px;
+  table {
+    text-align: start;
+  }
+}
+ body {
+   font-family: Tahoma,Verdana,Segoe,sans-serif;
+ }
+
