@@ -24,8 +24,8 @@ module.exports.run = async event => {
         const connection = await sql.connect(db(group))
         const db_response = await sql.query(body.query)
         
-        delete db_response.recordset
-        db_response.recordsets[0].map( (x,i) => {
+        delete db_response.recordsets
+        db_response.recordset.map( (x,i) => {
             let index = Object.keys(x).findIndex(e => e==="")
                 if (index >= 0) {
                 x[`column${1}`] = x['']
