@@ -107,8 +107,10 @@ const QueryPage = props => {
   }
 
   const exportExcel = async () => {
+    setLoading(true)
     if(query !== ""){
       let queryResult = await fetchExportExcel(query)
+      setLoading(false)
       if(typeof(queryResult) === 'object'){
         window.open(queryResult.link);
       }else{
