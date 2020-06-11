@@ -13,11 +13,9 @@ module.exports.run = async event => {
         
         const group = await verifyGroup(event)
 
-        if (!group)
-            throw Error('group_not_valid.')
+        if (!group) throw Error('group_not_valid.')
 
-        if (event.body === null || event.body === undefined )
-            throw Error('missing_params..')
+        if (event.body === null || event.body === undefined ) throw Error('missing_params..')
 
         let body = JSON.parse(event.body)
 
@@ -25,6 +23,16 @@ module.exports.run = async event => {
         
         const connection = await sql.connect(db(group))
         const db_response = await sql.query(body.query)
+        
+        delete db_response.recordsets
+        db_response.recordset.map( (x,i) => {
+            let index = Object.keys(x).findIndex(e => e==="")
+                if (index >= 0) {
+                x[`column${1}`] = x['']
+                delete x['']
+            }
+        })
+        
         return await response(200, db_response, connection)
 
     }catch (e) {
