@@ -119,6 +119,46 @@ const QueryPage = props => {
     }
   }
 
+  const copyToClipBoard = () => {
+    if (
+      document.querySelector(
+        '.ant-table-container .ant-table-content table tbody tr td .ant-empty.ant-empty-normal'
+      ) != null
+    ) {
+      return message.error('There is no data to copy')
+    }
+    selectElementContents(
+      document.querySelector(
+        '.ant-table-container .ant-table-content table tbody'
+      )
+    )
+  }
+
+  const selectElementContents = el => {
+    let body = document.body,
+      range,
+      sel
+    if (document.createRange && window.getSelection) {
+      range = document.createRange()
+      sel = window.getSelection()
+      sel.removeAllRanges()
+      try {
+        range.selectNodeContents(el)
+        sel.addRange(range)
+      } catch (e) {
+        range.selectNode(el)
+        sel.addRange(range)
+      }
+    } else if (body.createTextRange) {
+      range = body.createTextRange()
+      range.moveToElementText(el)
+      range.select()
+    }
+    document.execCommand('Copy')
+    window.getSelection().removeAllRanges()
+    message.success('Copied to clipboard')
+  }
+
   return (
     <Row className='query-page'>
       <SaveQueryModal
@@ -154,6 +194,15 @@ const QueryPage = props => {
           onClick={exportExcel}
           value={loading ? 'Loading...' : 'Export to Excel'}
         />
+        {/*
+        <CustomVerticalDivider />
+        <Button
+          disabled={loading}
+          onClick={copyToClipBoard}
+        >
+          Copy to ClipBoard
+        </Button>
+        */}
       </Col>
       <Divider style={{ backgroundColor: 'lightgray' }} />
 
