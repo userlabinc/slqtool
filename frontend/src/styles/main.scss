@@ -39,3 +39,17 @@
 .Hint__hint___2XngB {
   display: none;
 }
+
+#editor {
+  min-height: 150px;
+  padding: 10px;
+  background-color: white;
+  color: #444;
+  font-size: 14px;
+  font-family: monospace;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+}
+.statement {
+  color: orange;
+}
