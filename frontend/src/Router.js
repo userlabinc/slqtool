@@ -126,7 +126,7 @@ const Router = props => {
             collapsible
             collapsed={collapsed}
             onCollapse={onCollapse}
-            width={350}
+            width={250}
           >
             <div className='logo' />
             <Menu
