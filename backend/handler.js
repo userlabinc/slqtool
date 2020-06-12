@@ -1,19 +1,19 @@
 'use strict';
 
 const sql = require('mssql')
-const {   saveExcelToS3, response, readTables, detailsTable, serializeDataToS3, saveToS3, getDataFromS3, verifyGroup,detailFile,wakeUpLambda } = require('./utils')
+const moment = require('moment');
 const { db } = require('./config/db')
 const AWS = require('aws-sdk')
 const Stream = require("stream");
-
+const {   saveExcelToS3, response, readTables, detailsTable, serializeDataToS3, saveToS3, getDataFromS3, verifyGroup,detailFile,wakeUpLambda } = require('./utils')
 
 module.exports.run = async event => {
     try{
         if(wakeUpLambda(event)) return await response(200, {message: 'just warnUp me'}, null)
         
-        const group = await verifyGroup(event)
+        //const group = await verifyGroup(event)
 
-        if (!group) throw Error('group_not_valid.')
+        //if (!group) throw Error('group_not_valid.')
 
         if (event.body === null || event.body === undefined ) throw Error('missing_params..')
 
@@ -21,11 +21,17 @@ module.exports.run = async event => {
 
         if(!body || body.query === '') throw Error('missing_body')
         
-        const connection = await sql.connect(db(group))
+        const connection = await sql.connect(db('ADMIN'))
         const db_response = await sql.query(body.query)
         
         delete db_response.recordsets
         db_response.recordset.map( (x,i) => {
+            Object.keys(x).map(key => {
+                if(x[key] instanceof Date){
+                    x[key] = moment(x[key].toISOString().replace('T', ' ').replace('Z', '')).format('M/DD/YYYY hh:mm:ss A ')
+                }
+            })
+            
             let index = Object.keys(x).findIndex(e => e==="")
                 if (index >= 0) {
                 x[`column${1}`] = x['']
