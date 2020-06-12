@@ -121,18 +121,9 @@ const QueryPage = props => {
   }
 
   const copyToClipBoard = () => {
-    if (
-      document.querySelector(
-        '.ant-table-container .ant-table-content table tbody tr td .ant-empty.ant-empty-normal'
-      ) != null
-    ) {
-      return message.error('There is no data to copy')
-    }
-    CopyToClipboardFromTableBody(
-      document.querySelector(
-        '.ant-table-container .ant-table-content table tbody'
-      )
-    )
+    let tableToCopy = document.querySelector('.dynamic-table-2 .ant-table .ant-table-container .ant-table-content table')
+    if(tableToCopy === null ) return message.error('There is no data to copy')
+    CopyToClipboardFromTableBody(tableToCopy)
   }
 
   return (
