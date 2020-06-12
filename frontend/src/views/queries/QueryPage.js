@@ -98,7 +98,6 @@ const QueryPage = props => {
       // eslint-disable-next-line
       const savedQueries = await fetchSavedQueries()
 
-      // await fetchSavedQueries(setTimeout(() => {}, 3000))
     } catch (e) {
       message.error('Error saving the query')
     } finally {
