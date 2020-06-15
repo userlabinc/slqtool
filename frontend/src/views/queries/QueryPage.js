@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Divider, message, Button } from 'antd'
+import { Row, Col, Divider, message } from 'antd'
 
 // HOC
 import { withRouter } from 'react-router'
 
 // Components
 import QuerySquare from './components/QuerySquare'
-import ExecuteQueryButton from './components/ExecuteQueryButton'
 import Message from './components/Message'
 import DynamicTable2 from './components/DynamicTable2'
-import CustomVerticalDivider from './components/CustomVerticalDivider'
 import SaveQueryModal from './components/SaveQueryModal'
 import { fetchSavedQueries, fetchQuery, fetchExportExcel } from '../../config/Api'
-import ExportToExcelButton from './components/ExportToExcelButton'
 import CopyToClipboardFromTableBody from "./components/CopyToClipboardFromTableBody";
 
 const QueryPage = props => {
-  const [query, setQuery] = useState('')
   const [recordsets, setRecordsets] = useState([])
   const [loading, setLoading] = useState(false)
   const [showingMessage, setShowingMessage] = useState(false)
@@ -26,15 +22,9 @@ const QueryPage = props => {
 
   const { savedQueryToUse } = props
   useEffect(() => {
-    loadInlineQuery()
     // eslint-disable-next-line
   }, [savedQueryToUse])
 
-  const loadInlineQuery = () => {
-    if (savedQueryToUse) {
-      setQuery(savedQueryToUse)
-    }
-  }
 
   const checkRecordSets = queryResults => {
     return (
@@ -54,10 +44,9 @@ const QueryPage = props => {
     )
   }
 
-  const executeQuery = async () => {
+  const executeQuery = async (query) => {
     setLoading(true)
     let queryResult
-
     try {
       queryResult = await fetchQuery(query)
 
@@ -106,7 +95,7 @@ const QueryPage = props => {
     }
   }
 
-  const exportExcel = async () => {
+  const exportExcel = async (query) => {
     setLoading(true)
     if(query !== ""){
       let queryResult = await fetchExportExcel(query)
@@ -138,37 +127,7 @@ const QueryPage = props => {
       ) : null}
 
       <Col sm={24} style={{ marginTop: '10px' }}>
-        <QuerySquare loading={loading} query={query} setQuery={setQuery} />
-      </Col>
-      <Divider style={{ backgroundColor: 'lightgray' }} />
-      <Col sm={24} style={{ display: 'flex', justifyContent: 'center' }}>
-        <ExportToExcelButton
-        loading={loading}
-        onClick={executeQuery}
-        value={loading ? 'Loading...' : 'Execute'}
-        />
-        <CustomVerticalDivider />
-        <Button
-          disabled={loading}
-          onClick={() => setIsOpenSaveQueryModal(true)}
-        >
-          Save Query
-        </Button>
-        <CustomVerticalDivider />
-        <ExecuteQueryButton
-          loading={loading}
-          onClick={exportExcel}
-          value={loading ? 'Loading...' : 'Export to Excel'}
-        />
-
-        <CustomVerticalDivider />
-        <Button
-          disabled={loading}
-          onClick={copyToClipBoard}
-        >
-          Copy to ClipBoard
-        </Button>
-
+        <QuerySquare loading={loading} handleQuery={executeQuery} handlerExcel={exportExcel} handleToCopy={copyToClipBoard} querySaved={savedQueryToUse}/>
       </Col>
       <Divider style={{ backgroundColor: 'lightgray' }} />
 
