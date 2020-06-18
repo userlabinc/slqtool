@@ -11,9 +11,9 @@ module.exports.run = async event => {
     try{
         if(wakeUpLambda(event)) return await response(200, {message: 'just warnUp me'}, null)
         
-        //const group = await verifyGroup(event)
+        const group = await verifyGroup(event)
 
-        //if (!group) throw Error('group_not_valid.')
+        if (!group) throw Error('group_not_valid.')
 
         if (event.body === null || event.body === undefined ) throw Error('missing_params..')
 
@@ -21,7 +21,7 @@ module.exports.run = async event => {
 
         if(!body || body.query === '') throw Error('missing_body')
         
-        const connection = await sql.connect(db('ADMIN'))
+        const connection = await sql.connect(db(group))
         const db_response = await sql.query(body.query)
         
         delete db_response.recordsets
