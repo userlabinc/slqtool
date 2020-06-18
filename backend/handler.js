@@ -25,20 +25,22 @@ module.exports.run = async event => {
         const db_response = await sql.query(body.query)
         
         delete db_response.recordsets
-        db_response.recordset.map( (x,i) => {
-            Object.keys(x).map(key => {
-                if(x[key] instanceof Date){
-                    x[key] = moment(x[key].toISOString().replace('T', ' ').replace('Z', '')).format('M/DD/YYYY hh:mm:ss A ')
+        
+        if(db_response && db_response.recordset) {
+            db_response.recordset.map( (x,i) => {
+                Object.keys(x).map(key => {
+                    if(x[key] instanceof Date){
+                        x[key] = moment(x[key].toISOString().replace('T', ' ').replace('Z', '')).format('M/DD/YYYY hh:mm:ss A ')
+                    }
+                })
+        
+                let index = Object.keys(x).findIndex(e => e==="")
+                if (index >= 0) {
+                    x[`column${1}`] = x['']
+                    delete x['']
                 }
             })
-            
-            let index = Object.keys(x).findIndex(e => e==="")
-                if (index >= 0) {
-                x[`column${1}`] = x['']
-                delete x['']
-            }
-        })
-        
+        }
         return await response(200, db_response, connection)
 
     }catch (e) {
