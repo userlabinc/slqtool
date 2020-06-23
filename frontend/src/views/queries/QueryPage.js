@@ -14,6 +14,7 @@ import CopyToClipboardFromTableBody from "./components/CopyToClipboardFromTableB
 
 const QueryPage = props => {
   const [recordsets, setRecordsets] = useState([])
+  const [recordsets2, setRecordsets2] = useState([])
   const [loading, setLoading] = useState(false)
   const [showingMessage, setShowingMessage] = useState(false)
   const [rowsAffected, SetRowsAffected] = useState([[]])
@@ -29,8 +30,8 @@ const QueryPage = props => {
   const checkRecordSets = queryResults => {
     return (
       queryResults &&
-      Array.isArray(queryResults.recordset) &&
-      queryResults.recordset.length
+      Array.isArray(queryResults.recordsets) &&
+      queryResults.recordsets.length
     )
   }
 
@@ -58,9 +59,19 @@ const QueryPage = props => {
       if (!checkRecordSets(queryResult)) {
         setRecordsets([])
       } else {
-        setShowingMessage(false)
-        let json = JSON.stringify(queryResult.recordset, (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
-        setRecordsets(JSON.parse(json))
+
+        if(queryResult.recordsets.length == 2){
+          setShowingMessage(false)
+          let json = JSON.stringify(queryResult.recordsets[0], (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
+          let json2 = JSON.stringify(queryResult.recordsets[1], (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
+          setRecordsets(JSON.parse(json))
+          setRecordsets2(JSON.parse(json2))
+        }else{
+          setShowingMessage(false)
+          let json = JSON.stringify(queryResult.recordsets[0], (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
+          setRecordsets(JSON.parse(json))
+        }
+        
       }
 
       // Set rowsAffected
@@ -131,9 +142,23 @@ const QueryPage = props => {
       </Col>
       <Divider style={{ backgroundColor: 'lightgray' }} />
 
-      <Col sm={24}>
-        <DynamicTable2 recordsets={recordsets} />
-      </Col>
+      {recordsets2 ? (
+        <>
+        <Col sm={24}>
+          <DynamicTable2 recordsets={recordsets} />
+        </Col>
+          <Divider style={{ backgroundColor: 'lightgray' }} />
+        <Col sm={24}>
+        <DynamicTable2 recordsets={recordsets2} />
+        </Col>
+        </>
+      ):(
+        <Col sm={24}>
+          <DynamicTable2 recordsets={recordsets} />
+        </Col>
+
+      )}
+
     </Row>
   )
 }
