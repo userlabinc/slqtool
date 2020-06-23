@@ -24,10 +24,10 @@ module.exports.run = async event => {
         const connection = await sql.connect(db(group))
         const db_response = await sql.query(body.query)
         
-        delete db_response.recordsets
-        
-        if(db_response && db_response.recordset) {
-            db_response.recordset.map( (x,i) => {
+        delete db_response.recordset
+
+        if(db_response && db_response.recordsets[0]) {
+            db_response.recordsets[0].map( (x,i) => {
                 Object.keys(x).map(key => {
                     if(x[key] instanceof Date){
                         x[key] = moment(x[key].toISOString().replace('T', ' ').replace('Z', '')).format('M/DD/YYYY hh:mm:ss A ')
