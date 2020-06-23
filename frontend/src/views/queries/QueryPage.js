@@ -55,12 +55,11 @@ const QueryPage = props => {
         message.warning(queryResult)
         return
       }
-      
+
       if (!checkRecordSets(queryResult)) {
         setRecordsets([])
       } else {
 
-        //---
         if(queryResult.recordsets.length == 2){
           setShowingMessage(false)
           let json = JSON.stringify(queryResult.recordsets[0], (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
@@ -72,8 +71,7 @@ const QueryPage = props => {
           let json = JSON.stringify(queryResult.recordsets[0], (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
           setRecordsets(JSON.parse(json))
         }
-        //---
-
+        
       }
 
       // Set rowsAffected
