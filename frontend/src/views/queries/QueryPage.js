@@ -50,14 +50,12 @@ const QueryPage = props => {
     let queryResult
     try {
       queryResult = await fetchQuery(query)
-      
+
       if(typeof(queryResult) !== 'object'){
         message.warning(queryResult)
         return
       }
-
-      console.log(queryResult.recordsets.length)
-
+      
       if (!checkRecordSets(queryResult)) {
         setRecordsets([])
       } else {
