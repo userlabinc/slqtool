@@ -1,12 +1,14 @@
 import { message } from 'antd'
 
-export default function CopyToClipboardFromTableBody(el) {
+export default function CopyToClipboardFromTableBody(tables) {
   let text = ''
-  for (let i = 0; i < el.rows.length; i++) {
-    for (let j = 0; j < el.rows[i].cells.length; j++) {
-      text += `${el.rows[i].cells[j].innerText}\t`
+  for (let x = 0; x < tables.length; x++) {
+    for (let i = 0; i < tables[x].rows.length; i++) {
+      for (let j = 0; j < tables[x].rows[i].cells.length; j++) {
+        text += `${tables[x].rows[i].cells[j].innerText}\t`
+      }
+      text += '\n'
     }
-    text += '\n'
   }
   copyToClipboard(text)
   message.success('Copied to clipboard')
