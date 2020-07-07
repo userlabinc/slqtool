@@ -117,18 +117,6 @@ const detailFile = async recordsSet => {
       sheet.addRow(Object.values(element));
     });
   });
-  // let first_record = recordsSet[0][0];
-  // let recordSet_keys = Object.keys(first_record);
-  //
-  // sheet.columns = recordSet_keys.map(element => ({
-  //   header: element,
-  //   key: element
-  // }));
-  //
-  // recordsSet.forEach(element => {
-  //   sheet.addRow(element);
-  // });
-
   return workbook;
 };
 
