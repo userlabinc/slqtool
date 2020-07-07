@@ -5,7 +5,8 @@ export default function CopyToClipboardFromTableBody(tables) {
   for (let x = 0; x < tables.length; x++) {
     for (let i = 0; i < tables[x].rows.length; i++) {
       for (let j = 0; j < tables[x].rows[i].cells.length; j++) {
-        text += `${tables[x].rows[i].cells[j].innerText}\t`
+        text += `${tables[x].rows[i].cells[j].innerText}`
+        text += j + 1 === tables[x].rows[i].cells.length ? '' : '\t'
       }
       text += '\n'
     }
