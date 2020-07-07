@@ -42,7 +42,7 @@ const QuerySquare = props => {
         <CustomVerticalDivider />
         <Button
           disabled={props.loading} onClick={props.handleToCopy} >
-          Copy to ClipBoard
+          Copy to Clipboard
         </Button>
 
       </Col>
