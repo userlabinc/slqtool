@@ -71,7 +71,7 @@ const QueryPage = props => {
           let json = JSON.stringify(queryResult.recordsets[0], (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
           setRecordsets(JSON.parse(json))
         }
-        
+
       }
 
       // Set rowsAffected
@@ -120,7 +120,7 @@ const QueryPage = props => {
   }
 
   const copyToClipBoard = () => {
-    let tableToCopy = document.querySelector('.dynamic-table-2 .ant-table .ant-table-container .ant-table-content table')
+    let tableToCopy = document.querySelectorAll('.dynamic-table-2 .ant-table .ant-table-container .ant-table-content table')
     if(tableToCopy === null ) return message.error('There is no data to copy')
     CopyToClipboardFromTableBody(tableToCopy)
   }
