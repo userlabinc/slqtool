@@ -3,6 +3,8 @@ import { Layout, Menu, Drawer, message, Tree } from 'antd'
 import { ToolOutlined, LayoutOutlined } from '@ant-design/icons'
 import { Switch, Route, Link } from 'react-router-dom'
 
+import menu_routes from './config/Menu_routes'
+
 // HOC
 import { withRouter } from 'react-router'
 
@@ -36,6 +38,27 @@ const Router = props => {
 
     //eslint-disable-next-line
   }, [])
+
+  let returnAttribues = option => {
+    switch (option) {
+      case 'query':
+        return <>
+          <ToolOutlined />
+          <span>
+            <Link to='/'>Query</Link>
+          </span>
+        </>
+      case 'savedQueries':
+        return <>
+          <ToolOutlined />
+          <span onClick={() => handleOpenSavedQueriesDrawer()}>
+                  Saved Queries
+                </span>
+        </>
+      default:
+        return <></>
+    }
+  }
 
   const loadTablesInformation = async () => {
     try {
@@ -131,31 +154,31 @@ const Router = props => {
             <div className='logo' />
             <Menu
               mode='inline'
-              defaultSelectedKeys={['1']}
+              defaultSelectedKeys={['query']}
               defaultOpenKeys={['sub1']}
               style={{ height: '100%', borderRight: 0 }}
             >
-              <Menu.Item key='1'>
-                <ToolOutlined />
-                <Link to='/'>Query</Link>
-              </Menu.Item>
-              <Menu.Item key='2'>
-                <ToolOutlined />
-                <span onClick={() => handleOpenSavedQueriesDrawer()}>
-                  Saved Queries
-                </span>
-              </Menu.Item>
-              <SubMenu
-                key='3'
-                title={
-                  <div>
-                    <LayoutOutlined />
-                    <span>Tables</span>
-                  </div>
-                }
-              >
-                <Tree loadData={onLoadData2} treeData={treeData} />
-              </SubMenu>
+
+              {menu_routes && menu_routes.length > 0
+                && menu_routes.map( (option) =>
+                  option.key !== 'tables' ?
+                  (<Menu.Item key={option.key}>
+                      {returnAttribues(option.icon)}
+                  </Menu.Item>):(
+                      <SubMenu
+                        key='tables'
+                        title={
+                          <div>
+                            <LayoutOutlined />
+                            <span>Tables</span>
+                          </div>
+                        }
+                      >
+                        <Tree loadData={onLoadData2} treeData={treeData} />
+                      </SubMenu>
+                    )
+                 )
+              }
             </Menu>
           </Sider>
           <Layout className='site-layout'>
@@ -165,6 +188,11 @@ const Router = props => {
                 style={{ padding: 24, minHeight: 360 }}
               >
                 <Switch>
+
+                  {/*{menu_routes.map((r, i) => (*/}
+                  {/*  <Route exact key={i} path={r.route} component={r.component} />*/}
+                  {/*))}*/}
+
                   <Route path='/details/:tableName?'>
                     <DetailsPage />
                   </Route>
