@@ -3,7 +3,7 @@ service: sqlTool
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, 'prod'}
   region: 'us-east-1'
   timeout: 29
   environment:

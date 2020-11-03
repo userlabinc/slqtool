@@ -23,7 +23,7 @@ const QuerySquare = props => {
     />
       <Divider style={{ backgroundColor: 'lightgray' }} />
       <Col sm={24} style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button disabled={props.loading} onClick={_=>props.handleQuery(query)}  type={'primary'}>
+        <Button disabled={props.loading} onClick={_=>props.handleQuery(query,1)}  type={'primary'}>
            Execute
         </Button>
         <CustomVerticalDivider />

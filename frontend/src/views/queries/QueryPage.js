@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Divider, message } from 'antd'
+import {Row, Col, Divider, message, Button, Spin} from 'antd'
 
 // HOC
 import { withRouter } from 'react-router'
@@ -21,11 +21,15 @@ const QueryPage = props => {
   const [isOpenSaveQueryModal, setIsOpenSaveQueryModal] = useState(false)
   const [saveQueryLoading, setSaveQueryLoading] = useState(false)
 
+  const [nextHandler,setNextHandler] = useState(1)
+  const [nextQueryHandler,setNextQueryHandler] = useState("")
+
+  const numberOfRows = 1000
+
   const { savedQueryToUse } = props
   useEffect(() => {
     // eslint-disable-next-line
   }, [savedQueryToUse])
-
 
   const checkRecordSets = queryResults => {
     return (
@@ -45,11 +49,19 @@ const QueryPage = props => {
     )
   }
 
-  const executeQuery = async (query) => {
+  const executeQuery = async (query,pageNumber) => {
+    setRecordsets([])
+    setRecordsets2([])
     setLoading(true)
     let queryResult
     try {
-      queryResult = await fetchQuery(query)
+
+      if (pageNumber === 1){
+        setNextHandler(1)
+      }
+
+      let queryObject ={query:query,pageNumber:pageNumber}
+      queryResult = await fetchQuery(queryObject)
 
       if(typeof(queryResult) !== 'object'){
         message.warning(queryResult)
@@ -60,7 +72,7 @@ const QueryPage = props => {
         setRecordsets([])
       } else {
 
-        if(queryResult.recordsets.length == 2){
+        if(queryResult.recordsets.length === 2){
           setShowingMessage(false)
           let json = JSON.stringify(queryResult.recordsets[0], (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
           let json2 = JSON.stringify(queryResult.recordsets[1], (k, v) => v && typeof v === 'object' ? v : '' + (v === '' ? '-' :v));
@@ -82,6 +94,7 @@ const QueryPage = props => {
         setShowingMessage(true)
         SetRowsAffected(queryResult.rowsAffected[0])
       }
+      setNextQueryHandler(query)
     } catch (e) {
       message.error('Error')
       setShowingMessage(false)
@@ -89,6 +102,13 @@ const QueryPage = props => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const executeQueryNext = () => {
+    let page = nextHandler+1
+    setNextHandler(page)
+    executeQuery(nextQueryHandler,page)
+
   }
 
   const saveQuery = async query => {
@@ -109,7 +129,8 @@ const QueryPage = props => {
   const exportExcel = async (query) => {
     setLoading(true)
     if(query !== ""){
-      let queryResult = await fetchExportExcel(query)
+      let queryObject ={query:query}
+      let queryResult = await fetchExportExcel(queryObject)
       setLoading(false)
       if(typeof(queryResult) === 'object'){
         window.open(queryResult.link);
@@ -125,7 +146,15 @@ const QueryPage = props => {
     CopyToClipboardFromTableBody(tableToCopy)
   }
 
+  const pageNumber = (rows) => {
+    let number = rows / numberOfRows;
+    return number.toString().split('.')[1] ?
+      Math.trunc(number) + 1 :
+      Math.round((number))
+  }
+
   return (
+    <Spin spinning={loading} tip="Waiting for results...">
     <Row className='query-page'>
       <SaveQueryModal
         visible={isOpenSaveQueryModal}
@@ -136,12 +165,24 @@ const QueryPage = props => {
       {showingMessage ? (
         <>{Message.success(`Rows Affected: ${rowsAffected}`)}</>
       ) : null}
-
       <Col sm={24} style={{ marginTop: '10px' }}>
         <QuerySquare loading={loading} handleQuery={executeQuery} handlerExcel={exportExcel} handleToCopy={copyToClipBoard} querySaved={savedQueryToUse}/>
       </Col>
       <Divider style={{ backgroundColor: 'lightgray' }} />
-
+      {recordsets.length > 0 && (
+        <Col sm={24} style={{textAlign:'right',marginBottom:'5px'}}>
+          <span style={{marginRight:'10px'}}>
+            {!(rowsAffected >= numberOfRows) ?
+              '1/1':
+              `${nextHandler}/${pageNumber(rowsAffected)}`
+            }
+          </span>
+          <Button
+            disabled={!(rowsAffected >= numberOfRows) || (nextHandler === pageNumber(rowsAffected))}
+            onClick={executeQueryNext}>
+            NEXT PAGE</Button>
+        </Col>
+      )}
       {recordsets2 ? (
         <>
         <Col sm={24}>
@@ -156,10 +197,9 @@ const QueryPage = props => {
         <Col sm={24}>
           <DynamicTable2 recordsets={recordsets} />
         </Col>
-
       )}
-
     </Row>
+    </Spin>
   )
 }
 

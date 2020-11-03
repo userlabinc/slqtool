@@ -15,10 +15,14 @@ const {
   getDataFromS3,
   verifyGroup,
   detailFile,
-  wakeUpLambda
+  wakeUpLambda,
+  queryPagination,
+  countQueryPagination
 } = require("./utils");
 
 module.exports.run = async event => {
+  const pageSize = 1000;
+  let db_response_count = 0;
   try {
     if (wakeUpLambda(event))
       return await response(200, { message: "just warnUp me" }, null);
@@ -31,12 +35,18 @@ module.exports.run = async event => {
       throw Error("missing_params..");
 
     let body = JSON.parse(event.body);
-
+    
     if (!body || body.query === "") throw Error("missing_body");
-
+    
     const connection = await sql.connect(db(group));
-    const db_response = await sql.query(body.query);
-
+    const db_response = await sql.query(queryPagination(body.query,body.pageNumber,pageSize));
+    
+    if(body.query.toUpperCase().split(' ')[0].includes('SELECT')){
+      db_response_count = await sql.query(countQueryPagination(body.query));
+      console.log('db_response_count',db_response_count)
+      db_response.rowsAffected = [db_response_count.recordset[0].row_count]
+    }
+    
     delete db_response.recordset;
 
     if (db_response && db_response.recordsets[0]) {
@@ -143,8 +153,9 @@ module.exports.excel = async event => {
     if (event.body === null || event.body === undefined) {
       throw Error("missing_params");
     }
-
+    
     let body = JSON.parse(event.body);
+    
     if (!body || body.query === "") throw Error("missing_body");
 
     const connection = await sql.connect(db(null));
