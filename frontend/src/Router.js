@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Layout, Menu, Drawer, message, Tree } from 'antd'
 import { ToolOutlined, LayoutOutlined } from '@ant-design/icons'
-import { Switch, Route, Link } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 
 // HOC
 import { withRouter } from 'react-router'
@@ -137,9 +137,9 @@ const Router = props => {
             >
               <Menu.Item key='1'>
                 <ToolOutlined />
-                <Link to='/'>Query</Link>
+                <span>Query</span>
               </Menu.Item>
-              <Menu.Item key='2'>
+              <Menu.Item key='2' className={'hidden-element'}>
                 <ToolOutlined />
                 <span onClick={() => handleOpenSavedQueriesDrawer()}>
                   Saved Queries

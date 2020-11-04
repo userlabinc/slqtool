@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table } from 'antd'
+import {Table} from 'antd'
 
 const DynamicTable2 = props => {
   const CUSTOM_KEY = 'moocho_index'

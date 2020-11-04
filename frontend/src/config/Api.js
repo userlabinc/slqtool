@@ -68,7 +68,7 @@ const fetchPost = async (url, postObject) => {
   const options = {
     method: 'post',
     headers,
-    body: JSON.stringify({ query: postObject }),
+    body: JSON.stringify(postObject),
   }
   const response = await fetch(url, options)
   return response.json()
