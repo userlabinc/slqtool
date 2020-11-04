@@ -145,7 +145,7 @@ const queryPagination = (query,pageNumber,pageSize) => {
       from cte
       where row_number between (@pageNumber-1)*@pageSize+1 and @pageNumber*@pageSize
       ` : query
-  console.log("queryResult",bodyQuery)
+  
   return bodyQuery;
 }
 
@@ -162,7 +162,7 @@ const countQueryPagination = query => {
     select count(*) as row_count
         from cte
       ` : query
-  console.log('bodyQueryCount',bodyQueryCount)
+  
   return bodyQueryCount;
 }
 
