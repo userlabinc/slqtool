@@ -137,9 +137,9 @@ const Router = props => {
             >
               <Menu.Item key='1'>
                 <ToolOutlined />
-                <Link to='/'>Query</Link>
+                <span>Query</span>
               </Menu.Item>
-              <Menu.Item key='2'>
+              <Menu.Item key='2' className={'hidden-element'}>
                 <ToolOutlined />
                 <span onClick={() => handleOpenSavedQueriesDrawer()}>
                   Saved Queries

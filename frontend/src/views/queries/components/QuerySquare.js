@@ -26,8 +26,8 @@ const QuerySquare = props => {
         <Button disabled={props.loading} onClick={_=>props.handleQuery(query,1)}  type={'primary'}>
            Execute
         </Button>
-        <CustomVerticalDivider />
         <Button
+          className={'hidden-element'}
           disabled={props.loading}
           //onClick={() => setIsOpenSaveQueryModal(true)}
         >
@@ -35,7 +35,9 @@ const QuerySquare = props => {
         </Button>
         <CustomVerticalDivider />
 
-        <Button disabled={props.loading} onClick={_=>props.handlerExcel(query)}  >
+        <Button
+          disabled={props.loading}
+          onClick={_=>props.handlerExcel(query)}  >
           Execute to Excel
         </Button>
 
