@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Layout, Menu, Drawer, message, Tree } from 'antd'
 import { ToolOutlined, LayoutOutlined } from '@ant-design/icons'
-import { Switch, Route, Link } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 
 // HOC
 import { withRouter } from 'react-router'
