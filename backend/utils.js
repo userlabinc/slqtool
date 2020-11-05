@@ -129,6 +129,16 @@ const wakeUpLambda = event => {
 };
 
 const queryPagination = (query,pageNumber,pageSize) => {
+  let orderBy;
+  if(query.toUpperCase().split(' ')[0].includes('SELECT')){
+    orderBy = fncOrderBy(query).join(',')
+    if(!orderBy.includes('SELECT 0'))
+    {
+      let ind = query.lastIndexOf('ORDER BY')
+      query = query.substr(0, ind);
+    }
+  }
+  
   let bodyQuery = query.toUpperCase().split(' ')[0].includes('SELECT')
     ? `
       DECLARE @pageNumber AS INT
@@ -136,7 +146,7 @@ const queryPagination = (query,pageNumber,pageSize) => {
       SET @pageNumber=${pageNumber}
       SET @pageSize=${pageSize}
         ;with cte as (
-      select row_number() over (order by (select 0)) row_number,*
+      select row_number() over (order by ${orderBy}) row_number,*
         from (
         ${query}
         ) t
@@ -145,16 +155,27 @@ const queryPagination = (query,pageNumber,pageSize) => {
       from cte
       where row_number between (@pageNumber-1)*@pageSize+1 and @pageNumber*@pageSize
       ` : query
-  
+  console.log("bodyquery",bodyQuery)
   return bodyQuery;
 }
 
+
 const countQueryPagination = query => {
+  
+  let orderBy_;
+  if(query.toUpperCase().split(' ')[0].includes('SELECT')){
+    orderBy_ = fncOrderBy(query).join(',')
+    if(!orderBy_.includes('SELECT 0'))
+    {
+      let ind = query.lastIndexOf('ORDER BY')
+      query = query.substr(0, ind);
+    }
+  }
+  
   let bodyQueryCount = query.toUpperCase().split(' ')[0].includes('SELECT')
     ? `
       ;with cte as (
-    select *,
-        row_number() over (order by (select 0)) rn
+    select *,row_number() over (order by ${orderBy_}) rn
     from (
         ${query}
         ) t
@@ -162,8 +183,29 @@ const countQueryPagination = query => {
     select count(*) as row_count
         from cte
       ` : query
-  
+  console.log("bodyQueryCount",bodyQueryCount)
   return bodyQueryCount;
+}
+
+const fncOrderBy = (data) => {
+  let order =['(SELECT 0)']
+  let orderBy =''
+  let length = data.split('ORDER BY').length
+  if (length > 1) {
+    orderBy = data.split('ORDER BY')[length -1]
+    if (orderBy.includes(')')){
+      orderBy = ''
+    }
+    if (orderBy !=='' ){
+      order=[]
+      let elements = orderBy.split(',')
+      elements.forEach(e => {
+        let element = e.split('.').length > 1 ? e.split('.')[1].trim() : e.trim()
+        order.push(element)
+      })
+    }
+  }
+  return order
 }
 
 module.exports = {
@@ -178,5 +220,6 @@ module.exports = {
   detailFile,
   wakeUpLambda,
   queryPagination,
-  countQueryPagination
+  countQueryPagination,
+  fncOrderBy
 };
