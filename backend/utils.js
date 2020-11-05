@@ -140,7 +140,8 @@ const queryPagination = (query,pageNumber,pageSize) => {
   }
   
   let bodyQuery = query.toUpperCase().split(' ')[0].includes('SELECT')
-    ? `
+    ?
+    `
       DECLARE @pageNumber AS INT
       DECLARE @pageSize AS INT
       SET @pageNumber=${pageNumber}
@@ -155,13 +156,11 @@ const queryPagination = (query,pageNumber,pageSize) => {
       from cte
       where row_number between (@pageNumber-1)*@pageSize+1 and @pageNumber*@pageSize
       ` : query
-  console.log("bodyquery",bodyQuery)
   return bodyQuery;
 }
 
 
 const countQueryPagination = query => {
-  
   let orderBy_;
   if(query.toUpperCase().split(' ')[0].includes('SELECT')){
     orderBy_ = fncOrderBy(query).join(',')
@@ -183,7 +182,6 @@ const countQueryPagination = query => {
     select count(*) as row_count
         from cte
       ` : query
-  console.log("bodyQueryCount",bodyQueryCount)
   return bodyQueryCount;
 }
 
