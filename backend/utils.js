@@ -131,17 +131,16 @@ const wakeUpLambda = event => {
 const queryPagination = (query,pageNumber,pageSize) => {
   let orderBy;
   if(query.toUpperCase().split(' ')[0].includes('SELECT')){
-    orderBy = fncOrderBy(query).join(',')
+    orderBy = fncOrderBy(query.toUpperCase()).join(',')
     if(!orderBy.includes('SELECT 0'))
     {
-      let ind = query.lastIndexOf('ORDER BY')
+      let ind = query.toUpperCase().lastIndexOf('ORDER BY')
       query = query.substr(0, ind);
     }
   }
   
   let bodyQuery = query.toUpperCase().split(' ')[0].includes('SELECT')
-    ?
-    `
+    ? `
       DECLARE @pageNumber AS INT
       DECLARE @pageSize AS INT
       SET @pageNumber=${pageNumber}
@@ -156,6 +155,7 @@ const queryPagination = (query,pageNumber,pageSize) => {
       from cte
       where row_number between (@pageNumber-1)*@pageSize+1 and @pageNumber*@pageSize
       ` : query
+  console.log('bodyQuery',bodyQuery)
   return bodyQuery;
 }
 
@@ -163,10 +163,10 @@ const queryPagination = (query,pageNumber,pageSize) => {
 const countQueryPagination = query => {
   let orderBy_;
   if(query.toUpperCase().split(' ')[0].includes('SELECT')){
-    orderBy_ = fncOrderBy(query).join(',')
+    orderBy_ = fncOrderBy(query.toUpperCase()).join(',')
     if(!orderBy_.includes('SELECT 0'))
     {
-      let ind = query.lastIndexOf('ORDER BY')
+      let ind = query.toUpperCase().lastIndexOf('ORDER BY')
       query = query.substr(0, ind);
     }
   }
@@ -182,6 +182,7 @@ const countQueryPagination = query => {
     select count(*) as row_count
         from cte
       ` : query
+  console.log('bodyQueryCount >>>',bodyQueryCount)
   return bodyQueryCount;
 }
 
