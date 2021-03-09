@@ -1,7 +1,7 @@
 {
-  "REACT_APP_BACKEND_ENDPOINT":"http://localhost:3000/prod/run",
-  "REACT_APP_BACKEND_LIST_ENDPOINT":"http://localhost:3000/prod/read",
-  "REACT_APP_BACKEND_DETAIL_ENDPOINT":"http://localhost:3000/prod/details?name=",
-  "REACT_APP_SAVE_QUERIES": "http://localhost:3000/prod/save",
-  "REACT_APP_EXPORT_EXCEL": "http://localhost:3000/prod/excel"
+  "REACT_APP_BACKEND_ENDPOINT":" https://c0dt9mptl4.execute-api.us-east-1.amazonaws.com/prod/run",
+  "REACT_APP_BACKEND_LIST_ENDPOINT":" https://c0dt9mptl4.execute-api.us-east-1.amazonaws.com/prod/read",
+  "REACT_APP_BACKEND_DETAIL_ENDPOINT":" https://c0dt9mptl4.execute-api.us-east-1.amazonaws.com/prod/details?name=",
+  "REACT_APP_SAVE_QUERIES": " https://c0dt9mptl4.execute-api.us-east-1.amazonaws.com/prod/save",
+  "REACT_APP_EXPORT_EXCEL": " https://c0dt9mptl4.execute-api.us-east-1.amazonaws.com/prod/excel"
 }
