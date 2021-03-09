@@ -106,7 +106,7 @@ const Router = props => {
         visible={savedQueriesDrawerIsOpen}
         onClose={() => setSavedQueriesDrawerIsOpen(false)}
       >
-        {savedQueries.length &&
+        { (savedQueries && savedQueries.length) &&
           savedQueries.map((element, index) => (
             <div
               key={index}

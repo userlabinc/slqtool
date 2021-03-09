@@ -170,7 +170,7 @@ const QueryPage = props => {
       </Col>
       <Divider style={{ backgroundColor: 'lightgray' }} />
       {recordsets.length > 0 && (
-        <Col sm={24} style={{textAlign:'right',marginBottom:'5px'}}>
+        <Col className={'hidden-element'} sm={24} style={{textAlign:'right',marginBottom:'5px'}}>
           <span style={{marginRight:'10px'}}>
             {!(rowsAffected >= numberOfRows) ?
               '1/1':
@@ -178,6 +178,7 @@ const QueryPage = props => {
             }
           </span>
           <Button
+            className={'hidden-element'}
             disabled={!(rowsAffected >= numberOfRows) || (nextHandler === pageNumber(rowsAffected))}
             onClick={executeQueryNext}>
             NEXT PAGE</Button>

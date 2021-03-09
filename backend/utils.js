@@ -128,6 +128,8 @@ const wakeUpLambda = event => {
   return false;
 };
 
+
+/* THESE METHODS ARE FOR THE PAGINATION OF THE INFORMATION RETURNED BY THE QUERIES.
 const queryPagination = (query,pageNumber,pageSize) => {
   let bodyQuery = query.toUpperCase().split(' ')[0].includes('SELECT')
     ? `
@@ -165,6 +167,7 @@ const countQueryPagination = query => {
   
   return bodyQueryCount;
 }
+ */
 
 module.exports = {
   response,
@@ -177,6 +180,6 @@ module.exports = {
   saveExcelToS3,
   detailFile,
   wakeUpLambda,
-  queryPagination,
-  countQueryPagination
+  //queryPagination,
+  //countQueryPagination
 };
