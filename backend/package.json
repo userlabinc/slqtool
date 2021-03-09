@@ -1,6 +1,6 @@
 {
   "name": "moocho-dbms-backend",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The backend of the dbms for the moocho app",
   "main": "handler.js",
   "scripts": {
