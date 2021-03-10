@@ -128,44 +128,6 @@ const wakeUpLambda = event => {
   return false;
 };
 
-const queryPagination = (query,pageNumber,pageSize) => {
-  let bodyQuery = query.toUpperCase().split(' ')[0].includes('SELECT')
-    ? `
-      DECLARE @pageNumber AS INT
-      DECLARE @pageSize AS INT
-      SET @pageNumber=${pageNumber}
-      SET @pageSize=${pageSize}
-        ;with cte as (
-      select row_number() over (order by (select 0)) row_number,*
-        from (
-        ${query}
-        ) t
-      )
-      select *
-      from cte
-      where row_number between (@pageNumber-1)*@pageSize+1 and @pageNumber*@pageSize
-      ` : query
-  
-  return bodyQuery;
-}
-
-const countQueryPagination = query => {
-  let bodyQueryCount = query.toUpperCase().split(' ')[0].includes('SELECT')
-    ? `
-      ;with cte as (
-    select *,
-        row_number() over (order by (select 0)) rn
-    from (
-        ${query}
-        ) t
-    )
-    select count(*) as row_count
-        from cte
-      ` : query
-  
-  return bodyQueryCount;
-}
-
 module.exports = {
   response,
   readTables,
@@ -176,7 +138,5 @@ module.exports = {
   verifyGroup,
   saveExcelToS3,
   detailFile,
-  wakeUpLambda,
-  queryPagination,
-  countQueryPagination
+  wakeUpLambda
 };

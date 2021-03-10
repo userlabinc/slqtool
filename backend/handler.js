@@ -16,13 +16,10 @@ const {
   verifyGroup,
   detailFile,
   wakeUpLambda,
-  queryPagination,
-  countQueryPagination
 } = require("./utils");
 
 module.exports.run = async event => {
-  const pageSize = 1000;
-  let db_response_count = 0;
+  
   try {
     if (wakeUpLambda(event))
       return await response(200, { message: "just warnUp me" }, null);
@@ -39,13 +36,7 @@ module.exports.run = async event => {
     if (!body || body.query === "") throw Error("missing_body");
     
     const connection = await sql.connect(db(group));
-    const db_response = await sql.query(queryPagination(body.query,body.pageNumber,pageSize));
-    
-    if(body.query.toUpperCase().split(' ')[0].includes('SELECT')){
-      db_response_count = await sql.query(countQueryPagination(body.query));
-      console.log('db_response_count',db_response_count)
-      db_response.rowsAffected = [db_response_count.recordset[0].row_count]
-    }
+    const db_response = await sql.query(body.query);
     
     delete db_response.recordset;
 
